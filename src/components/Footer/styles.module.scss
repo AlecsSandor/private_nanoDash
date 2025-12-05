@@ -1,0 +1,45 @@
+@use "../../styles/" as *;
+
+.footer {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  .footerLinks {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+
+    a {
+      font-size: .9rem;
+      line-height: 1.5rem;
+      font-weight: 500;
+      color: rgb(107 114 128);
+      transition: all 300ms ease-in-out;
+
+      &:hover {
+        color: var(--theme-mono-black);
+        cursor: pointer;
+      }
+    }
+  }
+
+  .copyright {
+    color: rgb(156 163 175);
+    font-size: .875rem;
+    line-height: 1.25rem;
+    padding: 10px;
+  }
+
+  .link {
+    color: #202020;
+    font-weight: 300;
+    line-height: 100%;
+  }
+}

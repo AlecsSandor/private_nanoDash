@@ -1,0 +1,22 @@
+/* Common css/sass variables can be defined in this file */
+
+/* Example of a sass variable definition */
+$deviceTabletWidth: 768px;
+$deviceDesktopWidth: 1200px;
+
+/* Page left/right paddings */
+$pagePaddingLR: 20px;
+$pagePaddingLRTablet: 40px;
+$pagePaddingLRDesktop: 170px;
+
+/* Page max width */
+$pageMaxWidthTablet: $pagePaddingLRTablet * 2 + 900px;
+$pageMaxWidthDesktop: $pagePaddingLRDesktop * 2 + 2000px;
+
+/* Example of pure css variable definition */
+:root {
+  --transition-time-s: 500ms;
+
+  --device-tablet-width: 768px;
+  --device-desktop-width: 1200px;
+}

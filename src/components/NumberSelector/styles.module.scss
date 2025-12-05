@@ -1,0 +1,65 @@
+.numberSelectorWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: fit-content;
+}
+
+.label {
+  font-size: 0.9rem;
+  color: #444;
+  font-weight: 500;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  // background: #f9f9f9;
+  // border: 1px solid #ccc;
+  border-radius: 0.75rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.controlButton {
+  // background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+
+  &:hover:not(:disabled) {
+    background-color: #f0f0f0;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.input {
+  //width: 60px;
+  text-align: center;
+  border: none;
+  background: transparent;
+  font-size: 0.9rem;
+  color: #333;
+  outline: none;
+  -moz-appearance: textfield;
+
+  /* remove spinner arrows */
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}

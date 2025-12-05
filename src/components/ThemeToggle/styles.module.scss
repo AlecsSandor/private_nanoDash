@@ -1,0 +1,103 @@
+@use "../../styles/" as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-content: flex-end;
+  gap: 4px;
+  width: 30px;
+  height: 18px;
+  position: relative;
+
+  &:hover {
+    .switch {
+      width: 30px;
+      height: 18px;
+      right: 0;
+
+      .slider {
+        background-color: #cccccc58;
+      }
+    }
+  }
+
+  .switch {
+    position: absolute;
+    display: inline-block;
+    right: 34px;
+    height: 18px;
+    transition: all 0.5s ease;
+
+    &.mobile {
+      width: 30px;
+      height: 18px;
+      right: 0;
+    }
+
+    .input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+
+      &:checked {
+        &~.slider {
+          &::before {
+            background-color: #ffffff;
+          }
+        }
+
+        &~.slider::before {
+          transform: translateX(12px);
+        }
+      }
+
+      .switch {
+        right: 0;
+      }
+
+      &:disabled+.slider {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #cccccc00;
+      transition: 0.3s;
+      border-radius: 24px;
+
+      &.mobile {
+        background-color: #cccccc58;
+      }
+
+
+      &::before {
+        position: absolute;
+        content: "";
+        height: 14px;
+        width: 14px;
+        left: 2px;
+        bottom: 2px;
+        background-color: rgb(0, 0, 0);
+        border-radius: 50%;
+        transition: 0.35s ease-in-out;
+      }
+    }
+  }
+}
+
+.label {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.errorMessage {
+  color: red;
+  font-size: 0.8rem;
+}

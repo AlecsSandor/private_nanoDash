@@ -1,0 +1,37 @@
+[data-theme="light"] {
+  /* font faimily */
+  --primary-font-family: "Roboto Flex", system-ui, Avenir, Helvetica;
+  --secondary-font-family: "Poppins", system-ui, Avenir, Helvetica;
+  /* font size */
+  --theme-font-size-xs: 11px;
+  --theme-font-size-s: 12px;
+  --theme-font-size-m: 16px;
+  --theme-font-size-l: 18px;
+
+  /* font weight */
+  --theme-font-weight-xxs: 300;
+  --theme-font-weight-xs: 400;
+  --theme-font-weight-s: 500;
+  --theme-font-weight-m: 600;
+  --theme-font-weight-l: 700;
+  --theme-font-weight-xl: 800;
+
+  /* colors */
+  --theme-primary: #3b82f6;
+  --theme-mono-black: #000000;
+  --theme-mono-white: #ffffff;
+  --theme-mono-gray-0: rgb(163, 163, 163);
+  --theme-mono-gray-1: #4b5563;
+  --theme-mono-gray-2: #414144;
+  --theme-mono-gray-3: #333;
+  --theme-mono-gray-4: rgb(156, 163, 175);
+  --theme-mono-gray-5: #71717A;
+  --theme-mono-gray-6: #374151;
+
+  --theme-background: #151515;
+  --theme-link-text: #374151;
+  --theme-link-hover-text: #d6d6d651;
+  --theme-logo: #000000;
+  --theme-trait-card-bg: #ffffff;
+  --theme-grid-bg: #fffefe;
+}

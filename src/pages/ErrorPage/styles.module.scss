@@ -1,0 +1,53 @@
+@use "../../styles/" as *;
+
+.ErrorPage {
+    .mainSection {
+        display: flex;
+        flex-direction: column;
+
+        width: 100%;
+        min-height: 100vh;
+        align-items: center;
+        justify-content: space-between;
+
+        .header {
+            font-weight: 700;
+            font-size: 3.25rem;
+            line-height: 1;
+            color: rgb(31 41 55);
+            padding: 20px;
+            text-decoration: line-through;
+        }
+
+        .textCenter {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+
+            .errorText {
+                font-weight: 700;
+                font-size: 8rem;
+                line-height: 1;
+            }
+
+            .commentText {
+                font-size: 1rem;
+                line-height: 1.75rem;
+                max-width: 800px;
+                font-weight: 500;
+                color: #4b5563;
+                text-align: center;
+            }
+        }
+
+        .footer {
+            .footerText {
+                color: rgb(107 114 128);
+                font-size: .875rem;
+                line-height: 1.25rem;
+                padding: 20px;
+            }
+        }
+    }
+}

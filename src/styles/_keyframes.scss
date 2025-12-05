@@ -1,0 +1,29 @@
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes skeleton-blink {
+  0% {
+    background-color: #eaeaea;
+  }
+  50% {
+    background-color: #f5f5f5;
+  }
+  100% {
+    background-color: #eaeaea;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

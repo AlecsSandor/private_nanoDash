@@ -1,0 +1,50 @@
+@use "variables" as *;
+
+@mixin menuTextMobile {
+  font-family: var(--theme-primary-font-family);
+  font-size: var(--theme-font-size-m);
+  font-weight: var(--theme-font-weight-xs);
+  color: var(--theme-color-white);
+}
+
+@mixin menuTextDesktop {
+  font-family: var(--theme-primary-font-family);
+  font-size: var(--theme-font-size-s);
+  font-weight: var(--theme-font-weight-xs);
+  color: var(--theme-color-white);
+}
+
+@mixin tabTextMobile {
+  font-family: var(--theme-primary-font-family);
+  font-size: var(--theme-font-size-s);
+  font-weight: var(--theme-font-weight-s);
+  color: var(--theme-color-lightgrey);
+}
+
+@mixin scrollBar {
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: none;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 2px;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
+@mixin pageFadeIn {
+  opacity: 0;
+  animation: pageFadeIn 500ms ease-in-out 200ms forwards;
+}

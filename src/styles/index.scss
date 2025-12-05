@@ -1,0 +1,55 @@
+// common variables
+@forward "variables";
+// common mixins
+@forward "mixins";
+// common keyframes
+@forward "keyframes";
+// common layouts
+@forward "layouts";
+// common reset
+@forward "reset";
+
+// theme specific variables
+@use "_themes";
+
+// use light theme as default
+:root {
+  @extend [data-theme="light"];
+}
+
+html {
+  font-size: 16px;
+  background-color: var(--theme-background);
+
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: none;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 2px;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}

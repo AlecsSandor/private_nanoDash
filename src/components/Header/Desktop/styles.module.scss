@@ -1,0 +1,109 @@
+.desktopContainer {
+  position: relative;
+
+  .filler {
+    width: 100%;
+    height: 72px;
+  }
+
+  .content {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 110;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    height: 72px;
+    padding: 5px 40px;
+    backdrop-filter: blur(10px);
+    transition: height 0.2s ease;
+
+    &.shrunk {
+      height: 50px;
+      /* smaller height */
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 1.25rem;
+      line-height: 1;
+      color: var(--theme-logo);
+      padding-left: 20px;
+      cursor: pointer;
+
+      img {
+        width: 154px;
+      }
+    }
+
+    .rightSide {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 20px;
+      margin-left: auto;
+
+      .link {
+        font-size: .85rem;
+        font-weight: 400;
+        color: var(--theme-link-text);
+        display: flex;
+        align-items: center;
+        padding: 10px 12px;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: background-color 300ms ease;
+
+        &:hover {
+          background-color: var(--theme-link-hover-text);
+        }
+
+        .title {
+          font-weight: 500;
+        }
+      }
+
+      // .icon {
+      //   width: 21px;
+      // }
+
+      // .input {
+      //   width: 100%;
+
+      //   input {
+      //     height: 46px;
+      //     width: 100%;
+      //     border-radius: 33px;
+      //     border: 1px solid #afafaf;
+      //     background: #fff;
+      //     backdrop-filter: blur(7.400000095367432px);
+      //     padding: 0 0 0 48px;
+      //   }
+      // }
+    }
+  }
+}
+
+.profileDropdown {
+  position: absolute;
+  top: 84px;
+  right: 12px;
+  width: 307px;
+  border-radius: 10px;
+  background: rgba(245, 245, 245, 0.5);
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+}

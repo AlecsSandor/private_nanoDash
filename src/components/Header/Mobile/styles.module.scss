@@ -1,0 +1,124 @@
+// @use "styles" as *;
+
+.mobileContainer {
+  .filler {
+    width: 100%;
+    height: 65px;
+  }
+
+  .content {
+    position: fixed;
+    top: 0;
+    z-index: 110;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    height: 65px;
+    padding: 0 20px;
+    backdrop-filter: blur(10px);
+    transition: height 0.2s ease;
+
+    // &.shrunk {
+    //   height: 50px;
+    //   /* smaller height */
+    // }
+
+    .logo {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      padding: 15px 0;
+      font-weight: 700;
+      font-size: 1.25rem;
+      line-height: 1;
+      color: var(--theme-logo);
+      padding: 20px;
+      // text-decoration: line-through;
+      cursor: pointer;
+
+      img {
+        width: 124px;
+      }
+    }
+
+    .right {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      width: calc(100% - 140px);
+
+      .search {
+        display: flex;
+        justify-content: flex-end;
+        width: calc(100% - 63px);
+      }
+
+      .menuBtn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 43px;
+        height: 43px;
+        border-radius: 10px;
+        transition: background-color 500ms ease;
+
+        &.expanded {
+          background-color: var(--mono-gray-2);
+        }
+
+        svg {
+          width: 18px;
+        }
+      }
+    }
+  }
+
+  nav {
+    position: fixed;
+    top: 65px;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 100%;
+    height: calc(100vh - 65px);
+    padding: 20px 20px 48px 20px;
+    background-color: var(--mono-grey-5);
+    backdrop-filter: blur(10px);
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+
+    &.expanded {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .bottom {
+      margin-top: auto;
+    }
+
+    .link {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--theme-link-text);
+      display: flex;
+      align-items: flex-start;
+      padding: 25px 0px;
+      overflow: hidden;
+      transition: background-color 300ms ease;
+      border-top: 0.2px solid rgb(213, 213, 213);
+
+      &:last-of-type {
+        border-bottom: none;
+      }
+    }
+
+    .title {
+      font-weight: 500;
+    }
+  }
+}

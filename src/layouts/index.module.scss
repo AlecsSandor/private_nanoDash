@@ -1,0 +1,32 @@
+.defaultLayoutContainer {
+  min-height: 100vh;
+  background-color: var(--theme-background);
+  display: flex;
+  flex-direction: column;
+
+  header {
+  }
+
+  .sidenav {
+  }
+
+  main {
+    flex: 1;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .defaultLayoutContainer {
+    header {
+    }
+
+    .sidenav {
+    }
+
+    main {
+      flex: 1;
+      .pageContent {
+      }
+    }
+  }
+}

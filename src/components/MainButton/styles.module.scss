@@ -1,0 +1,92 @@
+@use "../../styles/" as *;
+
+.Button {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  width: fit-content;
+  min-width: 90px;
+  padding: 10px 17px;
+  border-radius: 8px;
+  font-family: var(--theme-primary-font-family);
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 0.75rem;
+  transition: background-color 300ms ease-in-out, box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+
+  .icon {
+    width: 14px;
+  }
+
+  &.primary {
+    color: #F4F4F5;
+    background-color: #1C2025;
+    box-shadow: 0 0 0 1px #e0ebff00;
+
+    &:not(.disabled):hover {
+      color: #e0ebff;
+      background-color: #34393f;
+      box-shadow: 0 0 0 1px #e0ebff, 0 2px 4px #e0ebff, 0 12px 24px #e0ebff;
+    }
+
+    &.disabled {
+      background-color: #4a4f54;
+    }
+  }
+
+  &.secondary {
+    color: var(--mono-white);
+    background-color: var(--mono-blue-1);
+
+    &:not(.disabled):hover {
+      color: var(--mono-black-2);
+      background-color: var(--mono-grey-5);
+    }
+  }
+
+  &.tertiary {
+    color: var(--mono-gray-4);
+    background-color: var(--mono-gray-1);
+
+    &:not(.disabled):hover {
+      color: var(--mono-gray-4);
+      background-color: var(--mono-gray-2);
+    }
+
+    &.disabled {
+      color: var(--mono-gray-2);
+      background-color: var(--mono-gray-1);
+    }
+  }
+
+  &.orange {
+    color: #fff;
+    background-color: #eb6f19;
+
+    &:not(.disabled):hover {
+      background-color: #eda472;
+    }
+
+    &.disabled {
+      background-color: #eda472;
+    }
+  }
+}
+
+@media screen and (min-width: $deviceTabletWidth) {
+  .Button {
+    &:not(.disabled) {
+      cursor: pointer;
+    }
+
+    &.disabled {
+      cursor: not-allowed;
+    }
+  }
+}
+
+.fullWidth {
+  width: 100%;
+}

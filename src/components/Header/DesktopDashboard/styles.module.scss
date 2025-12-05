@@ -1,0 +1,66 @@
+@use "../../../styles/" as *;
+
+.DesktopDashboard {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  width: 16rem;
+  height: 100vh;
+  border-right: 0.2px solid rgba(212, 210, 210, 0.348);
+  // background-color: var(--mono-grey-5);
+  // backdrop-filter: blur(10px);
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-top: 72px;
+
+    .link {
+      font-size: .85rem;
+        font-weight: 400;
+        color: var(--theme-link-text);
+        display: flex;
+        align-items: center;
+        padding: 10px 12px;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: background-color 300ms ease;
+
+      &:hover {
+        background-color: var( --theme-link-hover-text);
+      }
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 2rem;
+      line-height: 1;
+      color: var(--theme-logo);
+      padding: 40px 20px;
+      // text-decoration: line-through;
+      margin-left: -.5rem;
+      cursor: pointer;
+
+      img {
+        width: 154px;
+      }
+    }
+
+    .menuWrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+
+      .dashMenu {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+      }
+
+      .userMenu {}
+    }
+  }
+}

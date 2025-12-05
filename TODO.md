@@ -1,0 +1,4 @@
+- [ ] Create src/components/Module/index.tsx with draggable Module component
+- [ ] Create src/components/Module/styles.module.scss with Module and ContentWrapper styles
+- [ ] Edit src/pages/LandingPage/index.tsx to import and use Module component
+- [ ] Edit src/pages/LandingPage/styles.module.scss to remove Module and ContentWrapper styles
