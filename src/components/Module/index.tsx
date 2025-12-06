@@ -4,45 +4,80 @@ import classes from "./styles.module.scss";
 
 export interface ModuleProps {
   id: string;
+  position: { x: number; y: number };
+  width: number;
+  height: number;
+  others: { id: string; x: number; y: number; width: number; height: number }[];
+  onPositionChange: (id: string, x: number, y: number) => void;
   className?: string;
-  initialPosition?: { x: number; y: number };
-  width?: number;
-  height?: number;
 }
 
-export const Module: React.FC<ModuleProps> = ({ id, className, initialPosition, width, height }) => {
-  const [position, setPosition] = useState(initialPosition || { x: 0, y: 0 });
+export const Module: React.FC<ModuleProps> = ({
+  id,
+  position,
+  width,
+  height,
+  others,
+  onPositionChange,
+  className,
+}) => {
   const [isDragging, setIsDragging] = useState(false);
-  const positionRef = useRef(initialPosition || { x: 0, y: 0 });
+
+  const posRef = useRef(position);
+  const prevValidPos = useRef(position);
   const dragStartRef = useRef({ x: 0, y: 0 });
+
   const moduleRef = useRef<HTMLDivElement>(null);
+
+  const checkOverlap = (newX: number, newY: number) => {
+    const A = { x: newX, y: newY, w: width, h: height };
+
+    return others.some((B) => {
+      return !(
+        A.x + A.w <= B.x ||
+        A.x >= B.x + B.width ||
+        A.y + A.h <= B.y ||
+        A.y >= B.y + B.height
+      );
+    });
+  };
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
     dragStartRef.current = {
-      x: e.clientX - positionRef.current.x,
-      y: e.clientY - positionRef.current.y,
+      x: e.clientX - posRef.current.x,
+      y: e.clientY - posRef.current.y,
     };
+    prevValidPos.current = posRef.current;
   };
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!isDragging) return;
-    positionRef.current = {
+
+    posRef.current = {
       x: e.clientX - dragStartRef.current.x,
       y: e.clientY - dragStartRef.current.y,
     };
-    setPosition(positionRef.current);
-  }, [isDragging]);
+
+    onPositionChange(id, posRef.current.x, posRef.current.y);
+  }, [id, isDragging, onPositionChange]);
 
   const handleMouseUp = useCallback(() => {
     if (!isDragging) return;
     setIsDragging(false);
-    // Snap to 56px grid
-    const snappedX = Math.round(positionRef.current.x / 56) * 56;
-    const snappedY = Math.round(positionRef.current.y / 56) * 56;
-    positionRef.current = { x: snappedX, y: snappedY };
-    setPosition(positionRef.current);
-  }, [isDragging]);
+
+    const snappedX = Math.round(posRef.current.x / 56) * 56;
+    const snappedY = Math.round(posRef.current.y / 56) * 56;
+
+    // If overlaps → revert to previous valid
+    if (checkOverlap(snappedX, snappedY)) {
+      posRef.current = prevValidPos.current;
+    } else {
+      posRef.current = { x: snappedX, y: snappedY };
+    }
+
+    onPositionChange(id, posRef.current.x, posRef.current.y);
+  }, [id, isDragging, onPositionChange]);
 
   React.useEffect(() => {
     if (isDragging) {
@@ -63,10 +98,11 @@ export const Module: React.FC<ModuleProps> = ({ id, className, initialPosition, 
       ref={moduleRef}
       className={clsx(classes.Module, className)}
       style={{
+        zIndex: isDragging ? 999 : 1,
         transform: `translate(${position.x}px, ${position.y}px)`,
         cursor: isDragging ? "grabbing" : "grab",
-        width: `${width}px`,
-        height: `${height}px`,
+        width,
+        height,
       }}
       onMouseDown={handleMouseDown}
     >
