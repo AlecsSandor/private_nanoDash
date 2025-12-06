@@ -1,4 +1,3 @@
-- [ ] Create src/components/Module/index.tsx with draggable Module component
-- [ ] Create src/components/Module/styles.module.scss with Module and ContentWrapper styles
-- [ ] Edit src/pages/LandingPage/index.tsx to import and use Module component
-- [ ] Edit src/pages/LandingPage/styles.module.scss to remove Module and ContentWrapper styles
+- [x] Update ModuleProps interface to include id, initialPosition, width, height
+- [x] Modify Module component to use width, height in styles and set initial position from props
+- [x] In LandingPage, create an array of modules with properties and map over it to render modules

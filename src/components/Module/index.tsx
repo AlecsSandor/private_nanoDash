@@ -3,13 +3,17 @@ import clsx from "clsx";
 import classes from "./styles.module.scss";
 
 export interface ModuleProps {
+  id: string;
   className?: string;
+  initialPosition?: { x: number; y: number };
+  width?: number;
+  height?: number;
 }
 
-export const Module: React.FC<ModuleProps> = ({ className }) => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+export const Module: React.FC<ModuleProps> = ({ id, className, initialPosition, width, height }) => {
+  const [position, setPosition] = useState(initialPosition || { x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
-  const positionRef = useRef({ x: 0, y: 0 });
+  const positionRef = useRef(initialPosition || { x: 0, y: 0 });
   const dragStartRef = useRef({ x: 0, y: 0 });
   const moduleRef = useRef<HTMLDivElement>(null);
 
@@ -61,6 +65,8 @@ export const Module: React.FC<ModuleProps> = ({ className }) => {
       style={{
         transform: `translate(${position.x}px, ${position.y}px)`,
         cursor: isDragging ? "grabbing" : "grab",
+        width: `${width}px`,
+        height: `${height}px`,
       }}
       onMouseDown={handleMouseDown}
     >
