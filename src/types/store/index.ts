@@ -81,3 +81,13 @@ export interface ResetPasswordPayload {
   token: string;
   new_password: string;
 }
+
+export interface ModuleType {
+  id: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  title: string;
+  subtitle: string;
+}

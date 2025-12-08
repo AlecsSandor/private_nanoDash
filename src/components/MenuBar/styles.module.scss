@@ -1,0 +1,78 @@
+.MenuBar {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+
+  .Inner {
+    display: flex;
+    gap: 12px;
+    padding: 15px 15px;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    transition: all 200ms ease;
+  }
+
+  /* ★ ROUND ADD BUTTON */
+  .RoundButton {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+    background: rgba(30, 30, 30, 0.65);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+    transition: 200ms ease;
+
+    &:hover {
+      background: rgba(45, 45, 45, 0.7);
+    }
+
+    &:active {
+      transform: scale(0.92);
+    }
+
+    .icon {
+      width: 18px;
+      color: #bdf29a;
+    }
+  }
+
+  .Plus {
+    font-size: 22px;
+    font-weight: 600;
+    color: #bdf29a;
+    pointer-events: none;
+    line-height: 0;
+    margin-bottom: 2px;
+  }
+
+  .MenuButton {
+    background: rgba(42, 42, 42, 0.7);
+    color: #fff;
+
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: 1px solid #111;
+
+    font-size: 14px;
+    cursor: pointer;
+    transition: 200ms ease;
+
+    backdrop-filter: blur(6px);
+
+    &:hover {
+      background: rgba(55, 55, 55, 0.75);
+    }
+
+    &:active {
+      transform: scale(0.96);
+    }
+  }
+}

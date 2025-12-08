@@ -8,11 +8,37 @@
   .ContentWrapper {
     width: 100%;
     height: 100%;
+    padding: 15px;
     background-color: #1A1A1A;
     border-radius: 15px;
     border: 1.5px solid #151515;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-    transition: all 300ms ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    transition: all 200ms ease;
+
+    .titleWrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0px;
+
+      .title {
+        font-size: 12px;
+        font-weight: 500;
+        color: #ffffff;
+      }
+
+      .subtitle {
+        font-size: 8px;
+        font-weight: 500;
+        color: #828282;
+      }
+    }
+  }
+
+  &.selected {
+    .ContentWrapper {
+      border-color: #BDF29A; // highlight color
+      box-shadow: 0 0 0 3px rgba(232, 244, 56, 0.3);
+    }
   }
 
   &:hover {

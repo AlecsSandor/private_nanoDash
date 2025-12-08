@@ -1,44 +1,110 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import classes from "./styles.module.scss";
 import { Module } from "../../components/Module";
+import { useDispatch, useSelector } from "react-redux";
+import { deselectModule } from "../../store/features/ui/uiSlice";
+import { updateModulePosition } from "../../store/features/modules/modulesSlice";
+import { ModuleType } from "../../types/store";
+import { MenuBar } from "../../components/MenuBar";
 
 export const LandingPage = () => {
-  const initialModules = [
-    { id: "1", x: 0, y: 0, width: 224, height: 168 },
-    { id: "2", x: 250, y: 0, width: 168, height: 224 },
-    { id: "3", x: 0, y: 200, width: 280, height: 112 },
-    { id: "4", x: 350, y: 200, width: 168, height: 112 },
-    { id: "5", x: 0, y: 350, width: 224, height: 168 },
-    { id: "6", x: 250, y: 350, width: 168, height: 112 },
-  ];
+  const dispatch = useDispatch();
+  const selectedModuleId = useSelector((state: any) => state.ui.selectedModuleId);
+  const modules: ModuleType[] = useSelector(
+    (state: any) => state.modules.items
+  );
 
-  const [modules, setModules] = useState(initialModules);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const updateModulePosition = (id: string, x: number, y: number) => {
-    setModules((prev) =>
-      prev.map((m) =>
-        m.id === id ? { ...m, x, y } : m
-      )
-    );
+  const handleClickOutside = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+
+    const clickedModule = target.closest(".Module");
+    const clickedSidePanel = target.closest(".SidePanel");
+    const clickedMenuBar = target.closest(".MenuBar");
+
+    if (!selectedModuleId) return;
+
+    if (!clickedModule && !clickedSidePanel && !clickedMenuBar) {
+      dispatch(deselectModule());
+    }
+  };
+
+  const handlePositionChange = (id: string, x: number, y: number) => {
+    dispatch(updateModulePosition({ id, x, y }));
+  };
+
+  const [zoom, setZoom] = useState(1);
+
+  useEffect(() => {
+    const disableBrowserZoom = (e: WheelEvent) => {
+      if (e.ctrlKey) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener("wheel", disableBrowserZoom, { passive: false });
+
+    return () => {
+      document.removeEventListener("wheel", disableBrowserZoom);
+    };
+  }, []);
+
+  const handleWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+
+    const zoomSpeed = 0.0015;
+    const delta = -e.deltaY * zoomSpeed;
+
+    setZoom((prev) => {
+      let next = prev + delta;
+      next = Math.min(Math.max(next, 0.5), 2.0); // clamp
+      return next;
+    });
   };
 
   return (
-    <div className={classes.LandingPage}>
-      <div className={classes.AppHeader}>
-        {modules.map((module) => (
-          <Module
-            key={module.id}
-            id={module.id}
-            position={{ x: module.x, y: module.y }}
-            width={module.width}
-            height={module.height}
-            others={modules.filter((m) => m.id !== module.id)}
-            onPositionChange={updateModulePosition}
-          />
-        ))}
+    <div className={classes.LandingPage} onClick={handleClickOutside}>
+      {/* <div
+        className={classes.Workspace}
+        onWheel={handleWheel}
+        style={{
+          transform: `scale(${zoom})`,
+          transformOrigin: "top left",
+        }}
+      > */}
+      <div ref={containerRef} className={classes.AppHeader}>
+        <div
+          className={classes.Workspace}
+          onWheel={handleWheel}
+          style={{
+            transform: `scale(${zoom})`,
+            transformOrigin: "top left",
+          }}
+        >
+          {modules.map((module) => (
+            <Module
+              key={module.id}
+              id={module.id}
+              position={{ x: module.x, y: module.y }}
+              width={module.width}
+              height={module.height}
+              title={module.title}
+              subtitle={module.subtitle}
+              others={modules.filter((m) => m.id !== module.id)}
+              onPositionChange={handlePositionChange}
+                
+            >          
+            </Module>
+            
+          ))}
+        </div>
       </div>
+      {/* </div> */}
+      <MenuBar />
     </div>
   );
 };
 
 export default LandingPage;
+

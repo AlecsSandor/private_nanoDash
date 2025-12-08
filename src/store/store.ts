@@ -5,6 +5,7 @@ import postsReducer from "./features/posts/postsSlice";
 import notificationReducer from './features/notifications/notificationSlice';
 import AuthBannerReducer from './features/authBanner/authBannerSlice'
 import uiReducer from './features/ui/uiSlice';
+import modulesReducer from './features/modules/modulesSlice';
 //import dashboardReducer from "../features/dashboard/dashboardSlice";
 
 export const store = configureStore({
@@ -14,6 +15,7 @@ export const store = configureStore({
     notification: notificationReducer,
     authBanner: AuthBannerReducer,
     ui: uiReducer,
+    modules: modulesReducer,
     //dashboard: dashboardReducer,
   },
   middleware: (getDefaultMiddleware) =>
