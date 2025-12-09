@@ -1,0 +1,39 @@
+.container {
+  background-color: hsl(0, 0%, 10%);
+  padding: 1rem;
+  border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  min-height: 150px;
+}
+
+.svg {
+  width: 100%;
+  height: 100%;
+}
+
+.grid line {
+  stroke: hsl(0, 0%, 25%);
+  stroke-width: 0.5;
+  stroke-dasharray: 2 2;
+}
+
+.animatePath {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawLine 1.5s ease-out forwards;
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.dot {
+  transition: r 0.2s ease;
+  
+  &:hover {
+    r: 5;
+  }
+}

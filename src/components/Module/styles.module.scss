@@ -32,6 +32,13 @@
         color: #828282;
       }
     }
+
+    .innerContent {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      pointer-events: none;
+    }
   }
 
   &.selected {
