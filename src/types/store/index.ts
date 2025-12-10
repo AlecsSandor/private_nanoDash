@@ -90,4 +90,5 @@ export interface ModuleType {
   height: number;
   title: string;
   subtitle: string;
+  type: string;
 }

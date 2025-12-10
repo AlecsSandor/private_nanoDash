@@ -7,22 +7,7 @@ import { updateModulePosition } from "../../store/features/modules/modulesSlice"
 import { ModuleType } from "../../types/store";
 import { MenuBar } from "../../components/MenuBar";
 
-import BarChart from "../../contentComponents/BarChart";
-import AreaChart from "../../contentComponents/AreaChart/AreaChart";
-import BubbleChart from "../../contentComponents/BubbleChart/BubbleChart";
-import PieChart from "../../contentComponents/PieChart/PieChart";
-import LineChart from "../../contentComponents/LineChart/LineChart";
-import ScatterPlot from "../../contentComponents/ScatterPlot/ScatterPlot";
-import CandlestickChart from "../../contentComponents/CandlestickChart/CandlestickChart";
-import ColumnChart from "../../contentComponents/ColumnChart/ColumnChart";
-import DonutChart from "../../contentComponents/DonutChart/DonutChart";
-import GaugeChart from "../../contentComponents/GaugeChart/GaugeChart";
-import Heatmap from "../../contentComponents/Heatmap/Heatmap";
-import HorizontalBarChart from "../../contentComponents/HorizontalBar/HorizontalBarChart";
-import RadarChart from "../../contentComponents/RadarChart/RadarChart";
-import RadialProgress from "../../contentComponents/RadialProgress/RadialProgress";
-import SparklineChart from "../../contentComponents/SparklineChart/SparklineChart";
-import TimelineChart from "../../contentComponents/TimelineChart/TimelineChart";
+import componentMap from "../../contentComponents/componentMap";
 
 export const LandingPage = () => {
   const dispatch = useDispatch();
@@ -91,7 +76,10 @@ export const LandingPage = () => {
             transformOrigin: "top left",
           }}
         > */}
-          {modules.map((module) => (
+        {modules.map((module) => {
+          const ChartComponent = componentMap[module.type];
+
+          return (
             <Module
               key={module.id}
               id={module.id}
@@ -102,35 +90,11 @@ export const LandingPage = () => {
               subtitle={module.subtitle}
               others={modules.filter((m) => m.id !== module.id)}
               onPositionChange={handlePositionChange}
-                
-            >          
-            </Module>            
-          ))}
-          <Module
-            id="test"
-            position={{ x: 100, y: 100}}
-            width={224}
-            height={224}
-            title=""
-            subtitle=""
-            others={modules.filter((m) => m.id !== module.id)}
-            onPositionChange={handlePositionChange}
-          >
-           
-          </Module>
-
-          <Module
-            id="testssds"
-            position={{ x: 400, y: 400}}
-            width={224}
-            height={224}
-            title=""
-            subtitle=""
-            others={modules.filter((m) => m.id !== module.id)}
-            onPositionChange={handlePositionChange}
-          >
-            <RadialProgress />
-          </Module>
+            >
+              {ChartComponent ? <ChartComponent /> : null}
+            </Module>
+          );
+        })}
         {/* </div> */}
       </div>
       <MenuBar />
