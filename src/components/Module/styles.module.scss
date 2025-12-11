@@ -14,10 +14,12 @@
     border: 1.5px solid #151515;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
     transition: all 200ms ease;
+    box-sizing: border-box;
 
     .titleWrapper {
       display: flex;
       flex-direction: column;
+      //flex: 0 0 auto;
       gap: 0px;
 
       .title {
@@ -38,6 +40,8 @@
       height: 100%;
       display: flex;
       //pointer-events: none;
+      flex: 1 1 auto;
+      min-height: 0px;
     }
   }
 

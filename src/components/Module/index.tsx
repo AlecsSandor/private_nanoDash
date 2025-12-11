@@ -1,8 +1,16 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useMemo } from "react";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedModule, openSidePanel } from "../../store/features/ui/uiSlice";
+
+type OtherModule = {
+  id: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
 
 export interface ModuleProps {
   id: string;
@@ -11,20 +19,18 @@ export interface ModuleProps {
   height: number;
   title: string;
   subtitle: string;
-  others: { id: string; x: number; y: number; width: number; height: number }[];
   onPositionChange: (id: string, x: number, y: number) => void;
   className?: string;
   children?: React.ReactNode;
 }
 
-export const Module: React.FC<ModuleProps> = ({
+const ModuleComponent: React.FC<ModuleProps> = ({
   id,
   position,
   width,
   height,
   title,
   subtitle,
-  others,
   onPositionChange,
   className,
   children,
@@ -34,31 +40,44 @@ export const Module: React.FC<ModuleProps> = ({
   const dispatch = useDispatch();
   const selectedModuleId = useSelector((state: any) => state.ui.selectedModuleId);
 
+  const allModules = useSelector((state: any) => state.modules.items);
+
+  // 🔥 Compute others internally using fresh redux values
+  const others = useMemo<OtherModule[]>(() => {
+  return allModules
+    .filter((m: any) => m.id !== id)
+    .map((m: any) => ({
+      id: m.id,
+      x: m.x,
+      y: m.y,
+      width: m.width,
+      height: m.height,
+    }));
+}, [allModules, id]);
+
   const posRef = useRef(position);
   const prevValidPos = useRef(position);
   const dragStartRef = useRef({ x: 0, y: 0 });
 
-  // Click detection
   const clickStartRef = useRef({ x: 0, y: 0 });
-
   const moduleRef = useRef<HTMLDivElement>(null);
 
+  // 🔥 Correct overlap detection using internal state
   const checkOverlap = (newX: number, newY: number) => {
-    const A = { x: newX, y: newY, w: width, h: height };
+  const A = { x: newX, y: newY, w: width, h: height };
 
-    return others.some((B) => {
-      return !(
-        A.x + A.w <= B.x ||
-        A.x >= B.x + B.width ||
-        A.y + A.h <= B.y ||
-        A.y >= B.y + B.height
-      );
-    });
-  };
+  return others.some((B: OtherModule) => {
+    return !(
+      A.x + A.w <= B.x ||
+      A.x >= B.x + B.width ||
+      A.y + A.h <= B.y ||
+      A.y >= B.y + B.height
+    );
+  });
+};
 
   const handleMouseDown = (e: React.MouseEvent) => {
     clickStartRef.current = { x: e.clientX, y: e.clientY };
-
     setIsDragging(true);
 
     dragStartRef.current = {
@@ -78,9 +97,13 @@ export const Module: React.FC<ModuleProps> = ({
         y: e.clientY - dragStartRef.current.y,
       };
 
-      onPositionChange(id, posRef.current.x, posRef.current.y);
+      // 🔥 No React render — update DOM directly
+      if (moduleRef.current) {
+        moduleRef.current.style.transform =
+          `translate(${posRef.current.x}px, ${posRef.current.y}px)`;
+      }
     },
-    [id, isDragging, onPositionChange]
+    [isDragging]
   );
 
   const detectClick = (e: MouseEvent) => {
@@ -93,7 +116,7 @@ export const Module: React.FC<ModuleProps> = ({
     (e: MouseEvent) => {
       if (!isDragging) return;
 
-      // CLICK
+      // CLICK (no drag)
       if (detectClick(e)) {
         dispatch(setSelectedModule(id));
         dispatch(openSidePanel());
@@ -103,15 +126,24 @@ export const Module: React.FC<ModuleProps> = ({
 
       setIsDragging(false);
 
+      // 🔥 Snap to grid
       const snappedX = Math.round(posRef.current.x / 56) * 56;
       const snappedY = Math.round(posRef.current.y / 56) * 56;
 
+      // 🔥 Prevent overlap using fresh Redux state
       if (checkOverlap(snappedX, snappedY)) {
         posRef.current = prevValidPos.current;
       } else {
         posRef.current = { x: snappedX, y: snappedY };
       }
 
+      // Update DOM transform BEFORE dispatch to avoid jump
+      if (moduleRef.current) {
+        moduleRef.current.style.transform =
+          `translate(${posRef.current.x}px, ${posRef.current.y}px)`;
+      }
+
+      // Update Redux AFTER release (causes 1 re-render)
       onPositionChange(id, posRef.current.x, posRef.current.y);
     },
     [id, isDragging, onPositionChange]
@@ -125,6 +157,7 @@ export const Module: React.FC<ModuleProps> = ({
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     }
+
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
@@ -136,7 +169,7 @@ export const Module: React.FC<ModuleProps> = ({
       ref={moduleRef}
       className={clsx(
         classes.Module,
-        "Module",                         // ⬅ GLOBAL CLASS FOR OUTSIDE CLICK
+        "Module",
         className,
         { [classes.selected]: selectedModuleId === id }
       )}
@@ -155,6 +188,7 @@ export const Module: React.FC<ModuleProps> = ({
           <p className={classes.title}>{title}</p>
           <p className={classes.subtitle}>{subtitle}</p>
         </div>
+
         <div className={classes.innerContent}>
           {children}
         </div>
@@ -163,4 +197,5 @@ export const Module: React.FC<ModuleProps> = ({
   );
 };
 
+export const Module = React.memo(ModuleComponent);
 export default Module;

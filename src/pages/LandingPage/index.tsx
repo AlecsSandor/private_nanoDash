@@ -11,7 +11,7 @@ import componentMap from "../../contentComponents/componentMap";
 
 export const LandingPage = () => {
   const dispatch = useDispatch();
-  const selectedModuleId = useSelector((state: any) => state.ui.selectedModuleId);
+  //const selectedModuleId = useSelector((state: any) => state.ui.selectedModuleId);
   const modules: ModuleType[] = useSelector(
     (state: any) => state.modules.items
   );
@@ -25,7 +25,7 @@ export const LandingPage = () => {
     const clickedSidePanel = target.closest(".SidePanel");
     const clickedMenuBar = target.closest(".MenuBar");
 
-    if (!selectedModuleId) return;
+    //if (!selectedModuleId) return;
 
     if (!clickedModule && !clickedSidePanel && !clickedMenuBar) {
       dispatch(deselectModule());
@@ -88,7 +88,8 @@ export const LandingPage = () => {
               height={module.height}
               title={module.title}
               subtitle={module.subtitle}
-              others={modules.filter((m) => m.id !== module.id)}
+              //others={modules.filter((m) => m.id !== module.id)}
+              //others={modules}
               onPositionChange={handlePositionChange}
             >
               {ChartComponent ? <ChartComponent /> : null}

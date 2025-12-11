@@ -10,10 +10,10 @@ const initialState: ModulesState = {
   { id: "1", x: 0, y: 0, width: 224, height: 168, title: "", subtitle: "", type: "none" },
   { id: "2", x: 250, y: 0, width: 112, height: 112, title: "", subtitle: "", type: "bar" },
   { id: "3", x: 0, y: 200, width: 280, height: 112, title: "", subtitle: "", type: "line" },
-  { id: "4", x: 350, y: 200, width: 168, height: 112, title: "", subtitle: "", type: "area" },
+  { id: "4", x: 350, y: 200, width: 672, height: 112, title: "", subtitle: "", type: "area" },
   { id: "5", x: 0, y: 350, width: 224, height: 168, title: "", subtitle: "", type: "donut" },
   { id: "6", x: 250, y: 350, width: 112, height: 112, title: "", subtitle: "", type: "bubble" },
-  { id: "7", x: 250, y: 350, width: 672, height: 448, title: "Solana", subtitle: "Hello", type: "radial" },
+  { id: "7", x: 250, y: 350, width: 672, height: 448, title: "", subtitle: "", type: "radial" },
   { id: "8", x: 250, y: 350, width: 56, height: 56, title: "", subtitle: "", type: "none" },
 ]
 };
