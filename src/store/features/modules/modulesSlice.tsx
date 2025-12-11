@@ -24,6 +24,7 @@ const initialState: ModulesState = {
   { id: "15", x: 250, y: 350, width: 2, height: 2, title: "", subtitle: "", type: "summaryCard" },
   { id: "16", x: 250, y: 350, width: 2, height: 2, title: "", subtitle: "", type: "dotMatrixImage" },
   { id: "17", x: 250, y: 350, width: 2, height: 2, title: "", subtitle: "", type: "infoCard" },
+  { id: "18", x: 250, y: 350, width: 2, height: 2, title: "", subtitle: "", type: "gauge" },
 ]
 };
 
