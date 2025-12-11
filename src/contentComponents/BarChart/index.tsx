@@ -11,7 +11,7 @@ export interface BarChartProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const BarChart: React.FC<BarChartProps> = ({
   values = [],
-  barCount = 3,
+  barCount = 8,
   maxHeight = 100,
   barColor = "hsl(64, 85%, 59%)",
   animate = true,

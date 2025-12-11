@@ -15,14 +15,16 @@ type OtherModule = {
 export interface ModuleProps {
   id: string;
   position: { x: number; y: number };
-  width: number;
-  height: number;
+  width: number;    // grid units
+  height: number;   // grid units
   title: string;
   subtitle: string;
   onPositionChange: (id: string, x: number, y: number) => void;
   className?: string;
   children?: React.ReactNode;
 }
+
+const GRID = 56;
 
 const ModuleComponent: React.FC<ModuleProps> = ({
   id,
@@ -42,18 +44,22 @@ const ModuleComponent: React.FC<ModuleProps> = ({
 
   const allModules = useSelector((state: any) => state.modules.items);
 
-  // 🔥 Compute others internally using fresh redux values
+  // Convert grid units → pixels
+  const pixelWidth = width * GRID;
+  const pixelHeight = height * GRID;
+
+  // Compute "others" fresh from Redux (converted to pixels)
   const others = useMemo<OtherModule[]>(() => {
-  return allModules
-    .filter((m: any) => m.id !== id)
-    .map((m: any) => ({
-      id: m.id,
-      x: m.x,
-      y: m.y,
-      width: m.width,
-      height: m.height,
-    }));
-}, [allModules, id]);
+    return allModules
+      .filter((m: any) => m.id !== id)
+      .map((m: any) => ({
+        id: m.id,
+        x: m.x,
+        y: m.y,
+        width: m.width * GRID,
+        height: m.height * GRID,
+      }));
+  }, [allModules, id]);
 
   const posRef = useRef(position);
   const prevValidPos = useRef(position);
@@ -62,19 +68,19 @@ const ModuleComponent: React.FC<ModuleProps> = ({
   const clickStartRef = useRef({ x: 0, y: 0 });
   const moduleRef = useRef<HTMLDivElement>(null);
 
-  // 🔥 Correct overlap detection using internal state
+  // Overlap detection using pixel sizes
   const checkOverlap = (newX: number, newY: number) => {
-  const A = { x: newX, y: newY, w: width, h: height };
+    const A = { x: newX, y: newY, w: pixelWidth, h: pixelHeight };
 
-  return others.some((B: OtherModule) => {
-    return !(
-      A.x + A.w <= B.x ||
-      A.x >= B.x + B.width ||
-      A.y + A.h <= B.y ||
-      A.y >= B.y + B.height
-    );
-  });
-};
+    return others.some((B: OtherModule) => {
+      return !(
+        A.x + A.w <= B.x ||
+        A.x >= B.x + B.width ||
+        A.y + A.h <= B.y ||
+        A.y >= B.y + B.height
+      );
+    });
+  };
 
   const handleMouseDown = (e: React.MouseEvent) => {
     clickStartRef.current = { x: e.clientX, y: e.clientY };
@@ -97,7 +103,7 @@ const ModuleComponent: React.FC<ModuleProps> = ({
         y: e.clientY - dragStartRef.current.y,
       };
 
-      // 🔥 No React render — update DOM directly
+      // Smooth movement without React re-render
       if (moduleRef.current) {
         moduleRef.current.style.transform =
           `translate(${posRef.current.x}px, ${posRef.current.y}px)`;
@@ -116,7 +122,6 @@ const ModuleComponent: React.FC<ModuleProps> = ({
     (e: MouseEvent) => {
       if (!isDragging) return;
 
-      // CLICK (no drag)
       if (detectClick(e)) {
         dispatch(setSelectedModule(id));
         dispatch(openSidePanel());
@@ -126,24 +131,24 @@ const ModuleComponent: React.FC<ModuleProps> = ({
 
       setIsDragging(false);
 
-      // 🔥 Snap to grid
-      const snappedX = Math.round(posRef.current.x / 56) * 56;
-      const snappedY = Math.round(posRef.current.y / 56) * 56;
+      // Snap to 56px grid
+      const snappedX = Math.round(posRef.current.x / GRID) * GRID;
+      const snappedY = Math.round(posRef.current.y / GRID) * GRID;
 
-      // 🔥 Prevent overlap using fresh Redux state
+      // Prevent overlaps
       if (checkOverlap(snappedX, snappedY)) {
         posRef.current = prevValidPos.current;
       } else {
         posRef.current = { x: snappedX, y: snappedY };
       }
 
-      // Update DOM transform BEFORE dispatch to avoid jump
+      // Update DOM transform before Redux dispatch
       if (moduleRef.current) {
         moduleRef.current.style.transform =
           `translate(${posRef.current.x}px, ${posRef.current.y}px)`;
       }
 
-      // Update Redux AFTER release (causes 1 re-render)
+      // Update Redux (1 re-render after drag ends)
       onPositionChange(id, posRef.current.x, posRef.current.y);
     },
     [id, isDragging, onPositionChange]
@@ -177,8 +182,8 @@ const ModuleComponent: React.FC<ModuleProps> = ({
         zIndex: isDragging ? 999 : 1,
         transform: `translate(${position.x}px, ${position.y}px)`,
         cursor: isDragging ? "grabbing" : "grab",
-        width,
-        height,
+        width: pixelWidth,
+        height: pixelHeight,
         position: "absolute",
       }}
       onMouseDown={handleMouseDown}

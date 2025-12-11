@@ -15,6 +15,14 @@ import RadialProgress from "./RadialProgress/RadialProgress";
 import SparklineChart from "./SparklineChart/SparklineChart";
 import TimelineChart from "./TimelineChart/TimelineChart";
 
+import BarStatCard from "./BarStatCard/BarStatCard";
+import SegmentedStatCard from "./SegmentedStatCard/SegmentedStatCard";
+import WaveformStatCard from "./WaveformStatCard/WaveformStatCard";
+
+import SummaryCard from "./SummaryCard/SummaryCard";
+import DotMatrixImage from "./DotMatrixImage/DotMatrixImage";
+import InfoCard from "./InfoCard/InfoCard";
+
 const componentMap: Record<string, React.FC | null> = {
   none: null,
   bar: BarChart,
@@ -33,6 +41,14 @@ const componentMap: Record<string, React.FC | null> = {
   radial: RadialProgress,
   spark: SparklineChart,
   timeline: TimelineChart,
+  
+  barStatCard: BarStatCard,
+  segmentedStatCard: SegmentedStatCard,
+  waveformStatCard: WaveformStatCard,
+
+  summaryCard: SummaryCard,
+  dotMatrixImage: DotMatrixImage,
+  infoCard: InfoCard,
 };
 
 export default componentMap;

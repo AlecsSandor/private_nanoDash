@@ -1,0 +1,166 @@
+.container {
+  border-radius: 16px;
+  width: 100%;
+  height: 100%;
+  //min-height: 120px;
+  display: flex;
+  overflow: hidden;
+}
+
+.layoutHorizontal {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.layoutVertical {
+  flex-direction: column;
+}
+
+.sizeSm {
+  padding: 0.75rem 1rem;
+  min-height: 140px;
+  gap: 0.5rem;
+}
+
+.sizeMd {
+  padding: 1rem 1.25rem;
+  min-height: 160px;
+  gap: 0.75rem;
+}
+
+.sizeLg {
+  padding: 1.5rem 1.75rem;
+  min-height: 200px;
+  gap: 1rem;
+}
+
+.variantDefault {
+  //background-color: hsl(0, 0%, 10%);
+}
+
+.variantGradient {
+ // background: linear-gradient(180deg, hsl(0, 0%, 12%), hsl(0, 0%, 8%));
+}
+
+.variantStriped {
+  //background-color: hsl(0, 0%, 8%);
+  //border: 1px solid hsl(80, 40%, 25%);
+}
+
+.chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  flex: 1;
+  width: 100%;
+}
+
+.layoutHorizontal .chart {
+  max-width: 50%;
+  height: 60%;
+}
+
+.layoutVertical .chart {
+  height: 50%;
+}
+
+.barWrapper {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.bar {
+  width: 100%;
+  min-height: 4px;
+  transition: height 0.3s ease;
+}
+
+.shapeRounded {
+  border-radius: 3px 3px 0 0;
+}
+
+.shapeSharp {
+  border-radius: 0;
+}
+
+.shapeNotched {
+  border-radius: 0;
+  clip-path: polygon(10% 0, 90% 0, 100% 10%, 100% 100%, 0 100%, 0 10%);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.layoutHorizontal .content {
+  order: -1;
+}
+
+.title {
+  color: hsl(0, 0%, 70%);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.valueRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.value {
+  color: hsl(0, 0%, 100%);
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.sizeSm .value {
+  font-size: 1.5rem;
+}
+
+.sizeLg .value {
+  font-size: 2.25rem;
+}
+
+.change {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.positive {
+  color: hsl(150, 70%, 50%);
+}
+
+.negative {
+  color: hsl(0, 70%, 55%);
+}
+
+.subtitle {
+  color: hsl(0, 0%, 50%);
+  font-size: 0.75rem;
+}
+
+.animate {
+  opacity: 0;
+  animation: growUp 0.4s ease-out forwards;
+}
+
+@keyframes growUp {
+  from {
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+}

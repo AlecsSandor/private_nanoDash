@@ -9,8 +9,8 @@ export const MenuBar: React.FC = () => {
   const selectedModuleId = useSelector((state: any) => state.ui.selectedModuleId);
 
   const handleAddModule = () => {
-    const width = 56;
-    const height = 56;
+    const width = 1;
+    const height = 1;
 
     const x = window.innerWidth / 2 - width / 2;
     const y = window.innerHeight / 2 - height / 2;
@@ -18,10 +18,13 @@ export const MenuBar: React.FC = () => {
     dispatch(
       addModule({
         id: crypto.randomUUID(),
-        x,
-        y,
-        width,
-        height,
+        x: x,
+        y: y,
+        width: width,
+        height: height,
+        title: "", 
+        subtitle: "", 
+        type: "none"
       })
     );
   };
