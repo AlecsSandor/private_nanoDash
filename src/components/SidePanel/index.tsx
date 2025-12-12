@@ -2,12 +2,12 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   closeSidePanel,
-  // maybe also selectModule?
 } from "../../store/features/ui/uiSlice";
 
 import {
   updateModulePosition,
   updateModuleSize,
+  updateModuleProps,   // <<— YOU MUST ADD THIS TO YOUR SLICE
 } from "../../store/features/modules/modulesSlice";
 
 import classes from "./styles.module.scss";
@@ -16,14 +16,11 @@ export const SidePanel = () => {
   const dispatch = useDispatch();
 
   const isOpen = useSelector((state: any) => state.ui.isSidePanelOpen);
-  const selectedModuleId = useSelector(
-    (state: any) => state.ui.selectedModuleId
-  );
-
+  const selectedModuleId = useSelector((state: any) => state.ui.selectedModuleId);
   const modules = useSelector((state: any) => state.modules.items || []);
   const selectedModule = modules.find((m: any) => m.id === selectedModuleId);
 
-  // 🔥 Hooks MUST be called unconditionally
+  // ---- Stable local state ----
   const [tempX, setTempX] = React.useState(0);
   const [tempY, setTempY] = React.useState(0);
   const [tempW, setTempW] = React.useState(0);
@@ -32,25 +29,85 @@ export const SidePanel = () => {
   // Sync when module changes
   React.useEffect(() => {
     if (!selectedModule) return;
-
     setTempX(selectedModule.x);
     setTempY(selectedModule.y);
     setTempW(selectedModule.width);
     setTempH(selectedModule.height);
   }, [selectedModuleId]);
 
-  // ❗ NOW the conditional return is allowed AFTER hooks
+  // 🔥 Conditional rendering only AFTER hooks
   if (!selectedModule) {
     return (
       <div className={`${classes.sidePanel} ${isOpen ? classes.open : ""}`}>
         <div className={classes.header}>
           <h2>Module Settings</h2>
         </div>
-
         <div className={classes.placeholder}>Select a module to edit</div>
       </div>
     );
   }
+
+  const propsObj = selectedModule.props || {};
+
+  // ---- AUTOMATIC PROP INPUT RENDERING ----
+  const renderPropField = (key: string, value: any) => {
+    const handleChange = (newValue: any) => {
+      dispatch(
+        updateModuleProps({
+          id: selectedModule.id,
+          key,
+          value: newValue,
+        })
+      );
+    };
+
+    // Number
+    if (typeof value === "number") {
+      return (
+        <input
+          type="number"
+          value={value}
+          onChange={(e) => handleChange(Number(e.target.value))}
+        />
+      );
+    }
+
+    // Boolean
+    if (typeof value === "boolean") {
+      return (
+        <input
+          type="checkbox"
+          checked={value}
+          onChange={(e) => handleChange(e.target.checked)}
+        />
+      );
+    }
+
+    // String
+    if (typeof value === "string") {
+      return (
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => handleChange(e.target.value)}
+        />
+      );
+    }
+
+    // Array or Object → JSON editor
+    return (
+      <textarea
+        value={JSON.stringify(value, null, 2)}
+        onChange={(e) => {
+          try {
+            handleChange(JSON.parse(e.target.value));
+          } catch {
+            /* keep input until valid JSON */
+          }
+        }}
+      />
+    );
+  };
 
   return (
     <div className={`${classes.sidePanel} ${isOpen ? classes.open : ""}`}>
@@ -65,12 +122,8 @@ export const SidePanel = () => {
       </div>
 
       <div className={classes.content}>
-        <div className={classes.group}>
-          <label>ID</label>
-          <div className={classes.fieldReadonly}>{selectedModule.id}</div>
-        </div>
 
-        {/* X */}
+        {/* ===== POSITIONS ===== */}
         <div className={classes.group}>
           <label>Position X</label>
           <input
@@ -79,18 +132,11 @@ export const SidePanel = () => {
             onChange={(e) => {
               const val = Number(e.target.value);
               setTempX(val);
-              dispatch(
-                updateModulePosition({
-                  id: selectedModule.id,
-                  x: val,
-                  y: tempY,
-                })
-              );
+              dispatch(updateModulePosition({ id: selectedModule.id, x: val, y: tempY }));
             }}
           />
         </div>
 
-        {/* Y */}
         <div className={classes.group}>
           <label>Position Y</label>
           <input
@@ -99,18 +145,12 @@ export const SidePanel = () => {
             onChange={(e) => {
               const val = Number(e.target.value);
               setTempY(val);
-              dispatch(
-                updateModulePosition({
-                  id: selectedModule.id,
-                  x: tempX,
-                  y: val,
-                })
-              );
+              dispatch(updateModulePosition({ id: selectedModule.id, x: tempX, y: val }));
             }}
           />
         </div>
 
-        {/* Width */}
+        {/* WIDTH + HEIGHT */}
         <div className={classes.group}>
           <label>Width</label>
           <input
@@ -119,18 +159,11 @@ export const SidePanel = () => {
             onChange={(e) => {
               const val = Number(e.target.value);
               setTempW(val);
-              dispatch(
-                updateModuleSize({
-                  id: selectedModule.id,
-                  width: val,
-                  height: tempH,
-                })
-              );
+              dispatch(updateModuleSize({ id: selectedModule.id, width: val, height: tempH }));
             }}
           />
         </div>
 
-        {/* Height */}
         <div className={classes.group}>
           <label>Height</label>
           <input
@@ -139,20 +172,25 @@ export const SidePanel = () => {
             onChange={(e) => {
               const val = Number(e.target.value);
               setTempH(val);
-              dispatch(
-                updateModuleSize({
-                  id: selectedModule.id,
-                  width: tempW,
-                  height: val,
-                })
-              );
+              dispatch(updateModuleSize({ id: selectedModule.id, width: tempW, height: val }));
             }}
           />
         </div>
+
+        {/* ==============================
+             AUTO-GENERATED COMPONENT PROPS
+             ============================== */}
+        <h3 className={classes.sectionTitle}>Component Props</h3>
+
+        {Object.keys(propsObj).map((key) => (
+          <div className={classes.group} key={key}>
+            <label>{key}</label>
+            {renderPropField(key, propsObj[key])}
+          </div>
+        ))}
       </div>
     </div>
   );
 };
-
 
 export default SidePanel;

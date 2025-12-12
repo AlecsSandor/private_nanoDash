@@ -82,6 +82,17 @@ export interface ResetPasswordPayload {
   new_password: string;
 }
 
+export interface ModuleAPIConfig {
+  url: string;
+  method: "GET" | "POST";
+  headers: Record<string, string>;
+  enabled: boolean;
+  refreshInterval?: number;
+
+  // Field mapping: data.json.someField -> module.props.targetProp
+  mapping: Record<string, string>;
+}
+
 export interface ModuleType {
   id: string;
   x: number;
@@ -91,4 +102,7 @@ export interface ModuleType {
   title: string;
   subtitle: string;
   type: string;
+  props: Record<string, any>;
+
+  api?: ModuleAPIConfig;
 }
