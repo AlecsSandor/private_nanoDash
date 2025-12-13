@@ -1,6 +1,6 @@
 import React from "react";
 import { ModuleType } from "../../../types/store";
-import componentMap from "../../../contentComponents/componentMap";
+import { componentMap } from "../../../contentComponents/componentMap";
 
 interface ModuleRendererProps {
   module: ModuleType;

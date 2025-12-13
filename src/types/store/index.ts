@@ -1,4 +1,3 @@
-
 export interface SidenavLinkData {
   title: string;
   path: string;
@@ -93,16 +92,36 @@ export interface ModuleAPIConfig {
   mapping: Record<string, string>;
 }
 
-export interface ModuleType {
-  id: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  title: string;
-  subtitle: string;
-  type: string;
-  props: Record<string, any>;
+export interface ApiModuleProps {
+  api: {
+    name: string;
+    url: string;
+    method: "GET" | "POST";
+    headers: Record<string, string>;
+    enabled: boolean;
+    refreshIntervalMs: number;
+    responseSchema: any | null;
+    transformPath: string;
+  };
 
-  api?: ModuleAPIConfig;
+  status: {
+    isFetching: boolean;
+    lastFetchedAt: number | null;
+    lastFetchError: string | null;
+  };
+
+  lastData: any;
 }
+
+export type ModuleType =
+  | {
+      id: string;
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+      title: string;
+      subtitle: string;
+      type: string;
+      props: ApiModuleProps | Record<string, any>; // API or normal
+    };

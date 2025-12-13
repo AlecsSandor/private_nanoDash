@@ -7,8 +7,11 @@ import {
 import {
   updateModulePosition,
   updateModuleSize,
-  updateModuleProps,   // <<— YOU MUST ADD THIS TO YOUR SLICE
+  updateModuleProps,
+  updateModuleType
 } from "../../store/features/modules/modulesSlice";
+
+import { componentMap } from "../../contentComponents/componentMap";
 
 import classes from "./styles.module.scss";
 
@@ -48,6 +51,23 @@ export const SidePanel = () => {
   }
 
   const propsObj = selectedModule.props || {};
+
+  // ---------------------------------------
+  // Helper: update a nested API config block
+  // ---------------------------------------
+  const updateApiConfig = (updates: Partial<typeof selectedModule.api>) => {
+    if (!selectedModule.api) return;
+    dispatch(
+      updateModuleProps({
+        id: selectedModule.id,
+        key: "api",
+        value: {
+          ...selectedModule.api, // keep existing fields
+          ...updates,            // apply updates
+        },
+      })
+    );
+  };
 
   // ---- AUTOMATIC PROP INPUT RENDERING ----
   const renderPropField = (key: string, value: any) => {
@@ -178,16 +198,150 @@ export const SidePanel = () => {
         </div>
 
         {/* ==============================
-             AUTO-GENERATED COMPONENT PROPS
-             ============================== */}
-        <h3 className={classes.sectionTitle}>Component Props</h3>
+              MODULE TYPE SELECTOR
+            ============================== */}
+        <div className={classes.group}>
+          <label>Component Type</label>
+          <select
+            value={selectedModule.type}
+            onChange={(e) => {
+              const newType = e.target.value;
+              dispatch(updateModuleType({ id: selectedModule.id, type: newType }));
+            }}
+          >
+            {Object.keys(componentMap).map((typeKey) => (
+              <option key={typeKey} value={typeKey}>
+                {typeKey}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        {Object.keys(propsObj).map((key) => (
-          <div className={classes.group} key={key}>
-            <label>{key}</label>
-            {renderPropField(key, propsObj[key])}
-          </div>
-        ))}
+        {/* ==========================================
+              API MODULE SETTINGS (if type === "api")
+           ========================================== */}
+        {selectedModule.type === "api" && (
+          <>
+            <h3 className={classes.sectionTitle}>API Settings</h3>
+
+            {/* URL */}
+            <div className={classes.group}>
+              <label>URL</label>
+
+              <input
+                type="text"
+                value={selectedModule.api?.url ?? ""}
+                onChange={(e) => updateApiConfig({ url: e.target.value })}
+              />
+            </div>
+
+            {/* Method */}
+            <div className={classes.group}>
+              <label>Method</label>
+
+              <select
+                value={selectedModule.api?.method ?? "GET"}
+                onChange={(e) => updateApiConfig({ method: e.target.value })}
+              >
+                <option>GET</option>
+                <option>POST</option>
+                <option>PUT</option>
+                <option>PATCH</option>
+                <option>DELETE</option>
+              </select>
+            </div>
+
+            {/* Body (only if non-GET) */}
+            {(selectedModule.api?.method ?? "GET") !== "GET" && (
+              <div className={classes.group}>
+                <label>Body (JSON)</label>
+
+                <textarea
+                  value={
+                    selectedModule.api?.body
+                      ? JSON.stringify(selectedModule.api.body, null, 2)
+                      : ""
+                  }
+                  onChange={(e) => {
+                    try {
+                      updateApiConfig({ body: JSON.parse(e.target.value) });
+                    } catch {
+                      // ignore invalid JSON until corrected
+                    }
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Headers */}
+            <div className={classes.group}>
+              <label>Headers (JSON)</label>
+              <textarea
+                value={JSON.stringify(selectedModule.api?.headers ?? {}, null, 2)}
+                onChange={(e) => {
+                  try {
+                    updateApiConfig({ headers: JSON.parse(e.target.value) });
+                  } catch { }
+                }}
+              />
+            </div>
+
+            {/* Polling enable */}
+            <div className={classes.group}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={!!selectedModule.api?.enabled}
+                  onChange={(e) => updateApiConfig({ enabled: e.target.checked })}
+                />
+                Enable Automatic Refresh
+              </label>
+
+            </div>
+
+            {/* Polling interval */}
+            <div className={classes.group}>
+              <label>Refresh Interval (ms)</label>
+
+              <input
+                type="number"
+                value={selectedModule.api?.refreshIntervalMs ?? 0}
+                onChange={(e) =>
+                  updateApiConfig({ refreshIntervalMs: Number(e.target.value) })
+                }
+              />
+            </div>
+
+            {/* Transform path */}
+            <div className={classes.group}>
+              <label>Transform Path</label>
+              <input
+                type="text"
+                value={selectedModule.api?.transformPath ?? ""}
+                onChange={(e) => updateApiConfig({ transformPath: e.target.value })}
+              />
+            </div>
+
+            <div className={classes.separator} />
+          </>
+        )}
+
+        {/* ==========================================
+              GENERIC MODULE PROPS (NOT for API)
+           ========================================== */}
+        {selectedModule.type !== "api" && (
+          <>
+            <h3 className={classes.sectionTitle}>Component Props</h3>
+
+            {Object.keys(propsObj).map((key) => (
+              <div className={classes.group} key={key}>
+                <label>{key}</label>
+                {renderPropField(key, propsObj[key])}
+              </div>
+            ))}
+          </>
+        )}
+
       </div>
     </div>
   );
