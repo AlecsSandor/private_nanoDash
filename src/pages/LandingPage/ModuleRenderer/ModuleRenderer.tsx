@@ -3,11 +3,10 @@ import { ModuleType } from "../../../types/store";
 import { componentMap } from "../../../contentComponents/componentMap";
 
 interface ModuleRendererProps {
-  moduleId: string;
   module: ModuleType;
 }
 
-export const ModuleRenderer: React.FC<ModuleRendererProps> = ({ moduleId ,module }) => {
+export const ModuleRenderer: React.FC<ModuleRendererProps> = ({ module }) => {
   const Component = componentMap[module.type];
 
   if (!Component) {
