@@ -93,35 +93,37 @@ export interface ModuleAPIConfig {
 }
 
 export interface ApiModuleProps {
-  api: {
-    name: string;
-    url: string;
-    method: "GET" | "POST";
-    headers: Record<string, string>;
-    enabled: boolean;
-    refreshIntervalMs: number;
-    responseSchema: any | null;
-    transformPath: string;
-  };
+  //api: {
+  id: string;
+  name: string;
+  url: string;
+  method: "GET" | "POST";
+  headers: Record<string, string>;
+  enabled: boolean;
+  refreshIntervalMs: number;
+  responseSchema: any | null;
+  transformPath: string;
+  //};
 
-  status: {
-    isFetching: boolean;
-    lastFetchedAt: number | null;
-    lastFetchError: string | null;
-  };
+  //status: {
+  isFetching: boolean;
+  lastFetchedAt: number | null;
+  lastFetchError: string | null;
+  //};
 
   lastData: any;
 }
 
 export type ModuleType =
   | {
-      id: string;
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-      title: string;
-      subtitle: string;
-      type: string;
-      props: ApiModuleProps | Record<string, any>; // API or normal
-    };
+    id: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    title: string;
+    subtitle: string;
+    type: string;
+    props: ApiModuleProps | Record<string, any>; // API or normal
+  };
+

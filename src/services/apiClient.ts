@@ -10,45 +10,6 @@ const BASE_URL = process.env.REACT_APP_API_BASE_URL ?? "/api";
 let isRefreshing = false;
 let refreshPromise: Promise<boolean> | null = null;
 
-/**
- * callRefresh - call your refresh endpoint and update tokens on success
- */
-// async function callRefresh(): Promise<boolean> {
-//   const refreshToken = tokenService.getRefreshToken();
-//   if (!refreshToken) return false;
-
-//   try {
-//     const res = await fetch(`${BASE_URL}/shortform/refresh`, {
-//       method: "POST",
-//       credentials: "include",
-//       headers: { "Content-Type": "application/json", "ngrok-skip-browser-warning": "true" },
-//       body: JSON.stringify({ refresh_token: refreshToken }),
-//     });
-
-//     if (!res.ok) {
-//       tokenService.clear();
-//       store.dispatch(logout());
-//       return false;
-//     }
-
-//     const data = await res.json();
-//     const { access_token, refresh_token } = data;
-
-//     if (!access_token) return false;
-
-//     tokenService.setAccessToken(access_token);
-//     if (refresh_token) tokenService.setRefreshToken(refresh_token);
-//     store.dispatch(setToken(access_token));
-
-//     return true;
-//   } catch (err) {
-//     console.error("Token refresh failed:", err);
-//     tokenService.clear();
-//     store.dispatch(logout());
-//     return false;
-//   }
-// }
-
 async function callRefresh(): Promise<boolean> {
   try {
     const res = await fetch(`${BASE_URL}/shortform/refresh`, {
@@ -101,13 +62,31 @@ export interface ApiOptions {
   skipAuth?: boolean;
 }
 
+// function buildUrl(path: string, query?: ApiOptions["query"]) {
+//   const url = new URL(path, BASE_URL);
+//   if (query) {
+//     Object.entries(query).forEach(([k, v]) => {
+//       if (v !== undefined && v !== null) url.searchParams.set(k, String(v));
+//     });
+//   }
+//   return url.toString();
+// }
+
 function buildUrl(path: string, query?: ApiOptions["query"]) {
-  const url = new URL(path, BASE_URL);
+  const isAbsolute = /^https?:\/\//i.test(path);
+
+  const url = isAbsolute
+    ? new URL(path)
+    : new URL(path, BASE_URL);
+
   if (query) {
     Object.entries(query).forEach(([k, v]) => {
-      if (v !== undefined && v !== null) url.searchParams.set(k, String(v));
+      if (v !== undefined && v !== null) {
+        url.searchParams.set(k, String(v));
+      }
     });
   }
+
   return url.toString();
 }
 
@@ -119,9 +98,9 @@ export async function apiRequest<T = any>(
   const accessToken = tokenService.getAccessToken();
   const init: RequestInit = {
     method,
-    credentials: "include",
+    credentials: skipAuth ? "omit" : "include",
     headers: {
-      "Content-Type": "application/json", "ngrok-skip-browser-warning": "true",
+      // "Content-Type": "application/json",
       //...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
       ...headers,
       ...(skipAuth || !accessToken ? {} : { Authorization: `Bearer ${accessToken}` }),

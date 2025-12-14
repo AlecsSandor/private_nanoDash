@@ -26,37 +26,6 @@ const initialState: ModulesState = {
     // { id: "16", x: 250, y: 350, width: 2, height: 2, title: "", subtitle: "", type: "dotMatrixImage", props: { imageSrc: "https://cdn.pixabay.com/photo/2014/11/21/03/26/neist-point-540119_1280.jpg", dotSpacing: 7, dotSize: 4, dotStyle: "square", backgroundColor: "hsl(60, 10%, 85%)" } },
     // { id: "17", x: 250, y: 350, width: 2, height: 2, title: "", subtitle: "", type: "infoCard", props: { title: "Info", value: "Value", subtitle: "Subtitle", icon: undefined, accentColor: "hsl(64, 85%, 59%)", variant: "default", size: "md", animate: true } },
     // { id: "18", x: 250, y: 350, width: 2, height: 2, title: "", subtitle: "", type: "gauge", props: { value: 65, minValue: 0, maxValue: 100, colors: ["hsl(0, 70%, 55%)", "hsl(40, 80%, 55%)", "hsl(64, 85%, 59%)"], label: undefined, animate: true } },
-    {
-      id: "api-1",
-      type: "api",
-      title: "CoinMarket API",
-      subtitle: "",
-      x: 0,
-      y: 0,
-      width: 3,
-      height: 3,
-
-      props: {
-        api: {
-          name: "Binance BTC/USDT",
-          url: "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=200",
-          method: "GET",
-          headers: {},
-          enabled: true,
-          refreshIntervalMs: 60000,
-          responseSchema: null,
-          transformPath: "",
-        },
-
-        status: {
-          isFetching: false,
-          lastFetchedAt: null,
-          lastFetchError: null,
-        },
-
-        lastData: null,
-      }
-    }
   ]
 };
 
@@ -99,6 +68,7 @@ const modulesSlice = createSlice({
     },
     updateModuleProps(state, action) {
       const { id, key, value } = action.payload;
+
       const mod = state.items.find((m) => m.id === id);
       if (mod) {
         mod.props = { ...mod.props, [key]: value };

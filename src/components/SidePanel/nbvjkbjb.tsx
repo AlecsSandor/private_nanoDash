@@ -1,13 +1,18 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { closeSidePanel } from "../../store/features/ui/uiSlice";
+import {
+  closeSidePanel,
+} from "../../store/features/ui/uiSlice";
+
 import {
   updateModulePosition,
   updateModuleSize,
   updateModuleProps,
   updateModuleType
 } from "../../store/features/modules/modulesSlice";
+
 import { componentMap } from "../../contentComponents/componentMap";
+
 import classes from "./styles.module.scss";
 
 export const SidePanel = () => {
@@ -18,12 +23,13 @@ export const SidePanel = () => {
   const modules = useSelector((state: any) => state.modules.items || []);
   const selectedModule = modules.find((m: any) => m.id === selectedModuleId);
 
-  // ---- Stable local state for position/size ----
+  // ---- Stable local state ----
   const [tempX, setTempX] = React.useState(0);
   const [tempY, setTempY] = React.useState(0);
   const [tempW, setTempW] = React.useState(0);
   const [tempH, setTempH] = React.useState(0);
 
+  // Sync when module changes
   React.useEffect(() => {
     if (!selectedModule) return;
     setTempX(selectedModule.x);
@@ -32,6 +38,7 @@ export const SidePanel = () => {
     setTempH(selectedModule.height);
   }, [selectedModuleId]);
 
+  // 🔥 Conditional rendering only AFTER hooks
   if (!selectedModule) {
     return (
       <div className={`${classes.sidePanel} ${isOpen ? classes.open : ""}`}>
@@ -43,53 +50,79 @@ export const SidePanel = () => {
     );
   }
 
-   const propsObj = selectedModule.props || {};
+  const propsObj = selectedModule.props || {};
 
-  // ---- Generic prop updater ----
-  const updateProp = (key: string, value: any) => {
-    dispatch(updateModuleProps({ id: selectedModule.id, key, value }));
+  // ---------------------------------------
+  // Helper: update a nested API config block
+  // ---------------------------------------
+  const updateApiConfig = (updates: Partial<typeof selectedModule.api>) => {
+    if (!selectedModule.api) return;
+    dispatch(
+      updateModuleProps({
+        id: selectedModule.id,
+        key: "api",
+        value: {
+          ...selectedModule.api, // keep existing fields
+          ...updates,            // apply updates
+        },
+      })
+    );
   };
 
   // ---- AUTOMATIC PROP INPUT RENDERING ----
   const renderPropField = (key: string, value: any) => {
+    const handleChange = (newValue: any) => {
+      dispatch(
+        updateModuleProps({
+          id: selectedModule.id,
+          key,
+          value: newValue,
+        })
+      );
+    };
+
+    // Number
     if (typeof value === "number") {
       return (
         <input
           type="number"
           value={value}
-          onChange={(e) => updateProp(key, Number(e.target.value))}
+          onChange={(e) => handleChange(Number(e.target.value))}
         />
       );
     }
 
+    // Boolean
     if (typeof value === "boolean") {
       return (
         <input
           type="checkbox"
           checked={value}
-          onChange={(e) => updateProp(key, e.target.checked)}
+          onChange={(e) => handleChange(e.target.checked)}
         />
       );
     }
 
+    // String
     if (typeof value === "string") {
       return (
         <input
           type="text"
           value={value}
-          onChange={(e) => updateProp(key, e.target.value)}
+          onChange={(e) => handleChange(e.target.value)}
         />
       );
     }
 
+    // Array or Object → JSON editor
     return (
       <textarea
         value={JSON.stringify(value, null, 2)}
         onChange={(e) => {
           try {
-            updateProp(key, JSON.parse(e.target.value));
+            handleChange(JSON.parse(e.target.value));
           } catch {
-            // ignore invalid JSON
+            /* keep input until valid JSON */
           }
         }}
       />
@@ -171,9 +204,10 @@ export const SidePanel = () => {
           <label>Component Type</label>
           <select
             value={selectedModule.type}
-            onChange={(e) =>
-              dispatch(updateModuleType({ id: selectedModule.id, type: e.target.value }))
-            }
+            onChange={(e) => {
+              const newType = e.target.value;
+              dispatch(updateModuleType({ id: selectedModule.id, type: newType }));
+            }}
           >
             {Object.keys(componentMap).map((typeKey) => (
               <option key={typeKey} value={typeKey}>
@@ -184,35 +218,30 @@ export const SidePanel = () => {
         </div>
 
         {/* ==========================================
-              API MODULE SETTINGS (flat props)
+              API MODULE SETTINGS (if type === "api")
            ========================================== */}
         {selectedModule.type === "api" && (
           <>
             <h3 className={classes.sectionTitle}>API Settings</h3>
 
-            <div className={classes.group}>
-              <label>Name</label>
-              <input
-                type="text"
-                value={selectedModule.name ?? ""}
-                onChange={(e) => updateProp("name", e.target.value)}
-              />
-            </div>
-
+            {/* URL */}
             <div className={classes.group}>
               <label>URL</label>
+
               <input
                 type="text"
-                value={selectedModule.url ?? ""}
-                onChange={(e) => updateProp("url", e.target.value)}
+                value={selectedModule.api?.url ?? ""}
+                onChange={(e) => updateApiConfig({ url: e.target.value })}
               />
             </div>
 
+            {/* Method */}
             <div className={classes.group}>
               <label>Method</label>
+
               <select
-                value={selectedModule.method ?? "GET"}
-                onChange={(e) => updateProp("method", e.target.value)}
+                value={selectedModule.api?.method ?? "GET"}
+                onChange={(e) => updateApiConfig({ method: e.target.value })}
               >
                 <option>GET</option>
                 <option>POST</option>
@@ -222,58 +251,74 @@ export const SidePanel = () => {
               </select>
             </div>
 
-            {(selectedModule.method ?? "GET") !== "GET" && (
+            {/* Body (only if non-GET) */}
+            {(selectedModule.api?.method ?? "GET") !== "GET" && (
               <div className={classes.group}>
                 <label>Body (JSON)</label>
+
                 <textarea
-                  value={selectedModule.body ? JSON.stringify(selectedModule.body, null, 2) : ""}
+                  value={
+                    selectedModule.api?.body
+                      ? JSON.stringify(selectedModule.api.body, null, 2)
+                      : ""
+                  }
                   onChange={(e) => {
                     try {
-                      updateProp("body", JSON.parse(e.target.value));
-                    } catch {}
+                      updateApiConfig({ body: JSON.parse(e.target.value) });
+                    } catch {
+                      // ignore invalid JSON until corrected
+                    }
                   }}
                 />
               </div>
             )}
 
+            {/* Headers */}
             <div className={classes.group}>
               <label>Headers (JSON)</label>
               <textarea
-                value={selectedModule.headers ? JSON.stringify(selectedModule.headers, null, 2) : "{}"}
+                value={JSON.stringify(selectedModule.api?.headers ?? {}, null, 2)}
                 onChange={(e) => {
                   try {
-                    updateProp("headers", JSON.parse(e.target.value));
-                  } catch {}
+                    updateApiConfig({ headers: JSON.parse(e.target.value) });
+                  } catch { }
                 }}
               />
             </div>
 
+            {/* Polling enable */}
             <div className={classes.group}>
               <label>
                 <input
                   type="checkbox"
-                  checked={!!selectedModule.enabled}
-                  onChange={(e) => updateProp("enabled", e.target.checked)}
+                  checked={!!selectedModule.api?.enabled}
+                  onChange={(e) => updateApiConfig({ enabled: e.target.checked })}
                 />
                 Enable Automatic Refresh
               </label>
+
             </div>
 
+            {/* Polling interval */}
             <div className={classes.group}>
               <label>Refresh Interval (ms)</label>
+
               <input
                 type="number"
-                value={selectedModule.refreshIntervalMs ?? 0}
-                onChange={(e) => updateProp("refreshIntervalMs", Number(e.target.value))}
+                value={selectedModule.api?.refreshIntervalMs ?? 0}
+                onChange={(e) =>
+                  updateApiConfig({ refreshIntervalMs: Number(e.target.value) })
+                }
               />
             </div>
 
+            {/* Transform path */}
             <div className={classes.group}>
               <label>Transform Path</label>
               <input
                 type="text"
-                value={selectedModule.transformPath ?? ""}
-                onChange={(e) => updateProp("transformPath", e.target.value)}
+                value={selectedModule.api?.transformPath ?? ""}
+                onChange={(e) => updateApiConfig({ transformPath: e.target.value })}
               />
             </div>
 
@@ -282,11 +327,12 @@ export const SidePanel = () => {
         )}
 
         {/* ==========================================
-              GENERIC MODULE PROPS (NOT API)
+              GENERIC MODULE PROPS (NOT for API)
            ========================================== */}
         {selectedModule.type !== "api" && (
           <>
             <h3 className={classes.sectionTitle}>Component Props</h3>
+
             {Object.keys(propsObj).map((key) => (
               <div className={classes.group} key={key}>
                 <label>{key}</label>
@@ -295,9 +341,12 @@ export const SidePanel = () => {
             ))}
           </>
         )}
+
       </div>
     </div>
   );
 };
 
 export default SidePanel;
+
+

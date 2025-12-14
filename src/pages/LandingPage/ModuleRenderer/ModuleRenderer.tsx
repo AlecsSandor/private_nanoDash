@@ -3,10 +3,11 @@ import { ModuleType } from "../../../types/store";
 import { componentMap } from "../../../contentComponents/componentMap";
 
 interface ModuleRendererProps {
+  moduleId: string;
   module: ModuleType;
 }
 
-export const ModuleRenderer: React.FC<ModuleRendererProps> = ({ module }) => {
+export const ModuleRenderer: React.FC<ModuleRendererProps> = ({ moduleId ,module }) => {
   const Component = componentMap[module.type];
 
   if (!Component) {
@@ -15,6 +16,7 @@ export const ModuleRenderer: React.FC<ModuleRendererProps> = ({ module }) => {
 
   return (
     <Component
+    moduleId={module.id} 
       {...module.props}   // dynamic props from Redux state
       style={{ width: "100%", height: "100%" }}
     />

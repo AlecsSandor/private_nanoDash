@@ -24,8 +24,9 @@ export const LandingPage = () => {
     const clickedModule = target.closest(".Module");
     const clickedSidePanel = target.closest(".SidePanel");
     const clickedMenuBar = target.closest(".MenuBar");
+    const clickedFetch = target.closest(".fetchButton");
 
-    if (!clickedModule && !clickedSidePanel && !clickedMenuBar) {
+    if (!clickedModule && !clickedSidePanel && !clickedMenuBar && !clickedFetch) {
       dispatch(deselectModule());
     }
   };
@@ -74,7 +75,7 @@ export const LandingPage = () => {
             onPositionChange={handlePositionChange}
           >
             {/* ⬇️ NEW: Dynamic component with props */}
-            <ModuleRenderer module={module} />
+            <ModuleRenderer moduleId={module.id} module={module} />
           </Module>
         ))}
 

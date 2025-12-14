@@ -69,21 +69,22 @@ export const componentRegistry: Record<string, ComponentDefinition> = {
   api: {
     component: ApiModule,
     defaultProps: {
-      api: {
+      // api: {
+        id: "2xx",
         name: "",
-        url: "",
+        url: "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=2",
         method: "GET",
         headers: {},
         enabled: false,
         refreshIntervalMs: 60000,
         responseSchema: null,
         transformPath: "",
-      },
-      status: {
+      // },
+      // status: {
         isFetching: false,
         lastFetchedAt: null,
         lastFetchError: null,
-      },
+      // },
       lastData: null,
     }
   },
