@@ -75,7 +75,7 @@ export const LandingPage = () => {
             onPositionChange={handlePositionChange}
           >
             {/* ⬇️ NEW: Dynamic component with props */}
-            <ModuleRenderer moduleId={module.id} module={module} />
+            <ModuleRenderer module={module} />
           </Module>
         ))}
 

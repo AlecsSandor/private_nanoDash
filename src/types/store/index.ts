@@ -125,5 +125,11 @@ export type ModuleType =
     subtitle: string;
     type: string;
     props: ApiModuleProps | Record<string, any>; // API or normal
+    // bindings?: Record<string, { apiId: string; path: string[] } | null>;
+    bindings?: Record<
+  string,
+  { apiId: string; path: (string | number)[] } | null
+>;
+    [key: string]: any;
   };
 

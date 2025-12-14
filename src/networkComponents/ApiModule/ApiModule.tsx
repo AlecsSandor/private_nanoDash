@@ -50,7 +50,6 @@ const ApiModule: React.FC<ApiModuleFullProps> = ({
     } finally {
       dispatch(updateModuleProps({ id: moduleId, key: "isFetching", value: false }));
     }
-
   };
 
   React.useEffect(() => {

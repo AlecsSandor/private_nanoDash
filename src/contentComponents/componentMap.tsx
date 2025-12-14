@@ -323,7 +323,12 @@ export const componentRegistry: Record<string, ComponentDefinition> = {
 
   column: {
     component: ColumnChart,
-    defaultProps: {},
+    defaultProps: {
+      values: [],
+      labels: [],
+      barCount: 3,
+      showLabels: true,
+    },
   },
 
   hbar: {

@@ -6,6 +6,13 @@ interface ModulesState {
   items: ModuleType[];
 }
 
+interface BindingPayload {
+  id: string;        // module id
+  prop: string;      // prop name
+  apiId: string | null;
+  path: (string | number)[];   // JSON path in lastData
+}
+
 const initialState: ModulesState = {
   items: [
     // { id: "1", x: 0, y: 0, width: 5, height: 5, title: "", subtitle: "", type: "none", props: {} },
@@ -85,8 +92,22 @@ const modulesSlice = createSlice({
         mod.props = { ...defaults };
       }
     },
+    updateModuleBinding: (state, action: PayloadAction<BindingPayload>) => {
+      const { id, prop, apiId, path } = action.payload;
+      const module = state.items.find((m) => m.id === id);
+      if (!module) return;
+
+      if (!module.bindings) module.bindings = {};
+
+      if (!apiId) {
+        // remove binding if null
+        delete module.bindings[prop];
+      } else {
+        module.bindings[prop] = { apiId, path };
+      }
+    },
   },
 });
 
-export const { updateModulePosition, updateModuleSize, addModule, removeModule, duplicateModule, updateModuleProps, updateModuleType } = modulesSlice.actions;
+export const { updateModulePosition, updateModuleSize, addModule, removeModule, duplicateModule, updateModuleProps, updateModuleType, updateModuleBinding } = modulesSlice.actions;
 export default modulesSlice.reducer;
