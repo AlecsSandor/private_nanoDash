@@ -21,9 +21,14 @@ import WaveformStatCard from "./WaveformStatCard/WaveformStatCard";
 
 import SummaryCard from "./SummaryCard/SummaryCard";
 import DotMatrixImage from "./DotMatrixImage/DotMatrixImage";
+import PlainImage from "./PlainImage";
 import InfoCard from "./InfoCard/InfoCard";
 
+import BreedCard from "../tayloredCotent/BreedCard";
+
 import ApiModule from "../networkComponents/ApiModule/ApiModule";
+
+
 
 // const componentMap: Record<string, React.FC | null> = {
 //   none: null,
@@ -70,23 +75,83 @@ export const componentRegistry: Record<string, ComponentDefinition> = {
     component: ApiModule,
     defaultProps: {
       // api: {
-        id: "2xx",
-        name: "",
-        url: "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=2",
-        method: "GET",
-        headers: {},
-        enabled: false,
-        refreshIntervalMs: 60000,
-        responseSchema: null,
-        transformPath: "",
+      id: "2xx",
+      name: "",
+      url: "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1s&limit=24",
+      method: "GET",
+      headers: {},
+      enabled: false,
+      refreshIntervalMs: 60000,
+      responseSchema: null,
+      transformPath: "",
       // },
       // status: {
-        isFetching: false,
-        lastFetchedAt: null,
-        lastFetchError: null,
+      isFetching: false,
+      lastFetchedAt: null,
+      lastFetchError: null,
       // },
       lastData: null,
     }
+  },
+
+  plainImage: {
+    component: PlainImage,
+    defaultProps: {
+      imgSource: "",
+    },
+  },
+
+  breedCard: {
+    component: BreedCard,
+    defaultProps: {
+      data: {
+        id: "0XYvRd7oD",
+        url: "https://cdn2.thecatapi.com/images/0XYvRd7oD.jpg",
+        breeds: [{
+          weight: { imperial: "7 - 10", metric: "3 - 5" },
+          id: "abys",
+          name: "Abyssinian",
+          temperament: "Active, Energetic, Independent, Intelligent, Gentle",
+          origin: "Egypt",
+          country_codes: "EG",
+          country_code: "EG",
+          description: "The Abyssinian is easy to care for, and a joy to have in your home.",
+          life_span: "14 - 15",
+          indoor: 0,
+          lap: 1,
+          adaptability: 5,
+          affection_level: 5,
+          child_friendly: 3,
+          dog_friendly: 4,
+          energy_level: 5,
+          grooming: 1,
+          health_issues: 2,
+          intelligence: 5,
+          shedding_level: 2,
+          social_needs: 5,
+          stranger_friendly: 5,
+          vocalisation: 1,
+          experimental: 0,
+          hairless: 0,
+          natural: 1,
+          rare: 0,
+          rex: 0,
+          suppressed_tail: 0,
+          short_legs: 0,
+          hypoallergenic: 0,
+          reference_image_id: "0XYvRd7oD",
+          wikipedia_url: "https://en.wikipedia.org/wiki/Abyssinian_(cat)"
+        }],
+        width: 1204,
+        height: 1445
+      },
+      size: "md",
+      variant: "default",
+      showImage: true,
+      showStats: true,
+      maxTraits: 6,
+    }
+
   },
 
   bar: {

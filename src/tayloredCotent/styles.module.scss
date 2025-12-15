@@ -1,0 +1,251 @@
+.breedCard {
+  display: flex;
+  flex-direction: column;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 8px 32px hsl(var(--foreground) / 0.1);
+    transform: translateY(-2px);
+  }
+
+  // Size variants
+  &.sm {
+    max-width: 280px;
+
+    .image {
+      height: 160px;
+    }
+
+    .content {
+      padding: 12px;
+    }
+
+    .name {
+      font-size: 1rem;
+    }
+
+    .description {
+      font-size: 0.75rem;
+      -webkit-line-clamp: 2;
+    }
+
+    .trait {
+      font-size: 0.65rem;
+      padding: 2px 6px;
+    }
+  }
+
+  &.md {
+    max-width: 360px;
+
+    .image {
+      height: 200px;
+    }
+
+    .content {
+      padding: 16px;
+    }
+
+    .name {
+      font-size: 1.25rem;
+    }
+
+    .description {
+      font-size: 0.8rem;
+      -webkit-line-clamp: 3;
+    }
+
+    .trait {
+      font-size: 0.7rem;
+      padding: 3px 8px;
+    }
+  }
+
+  &.lg {
+    max-width: 480px;
+
+    .image {
+      height: 280px;
+    }
+
+    .content {
+      padding: 24px;
+    }
+
+    .name {
+      font-size: 1.5rem;
+    }
+
+    .description {
+      font-size: 0.875rem;
+      -webkit-line-clamp: 4;
+    }
+
+    .trait {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+    }
+  }
+
+  // Variant styles
+  &.compact {
+    .content {
+      padding: 12px;
+    }
+  }
+
+  &.detailed {
+    .content {
+      gap: 16px;
+    }
+  }
+}
+
+.imageContainer {
+  position: relative;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+
+  .breedCard:hover & {
+    transform: scale(1.05);
+  }
+}
+
+.imageOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px 12px;
+  background: linear-gradient(transparent, hsl(var(--foreground) / 0.7));
+  display: flex;
+  justify-content: flex-end;
+}
+
+.origin {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: hsl(var(--background));
+  background: hsl(var(--primary));
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.name {
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin: 0;
+  line-height: 1.2;
+}
+
+.meta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.lifespan,
+.weight {
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.description {
+  color: hsl(var(--muted-foreground));
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.traits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.trait {
+  background: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+  border-radius: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid hsl(var(--border));
+}
+
+.statBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statLabel {
+  font-size: 0.7rem;
+  color: hsl(var(--muted-foreground));
+  min-width: 80px;
+}
+
+.statTrack {
+  flex: 1;
+  height: 6px;
+  background: hsl(var(--muted));
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.statFill {
+  height: 100%;
+  background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary) / 0.7));
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.statValue {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  min-width: 16px;
+  text-align: right;
+}
+
+.link {
+  font-size: 0.75rem;
+  color: hsl(var(--primary));
+  text-decoration: none;
+  font-weight: 500;
+  align-self: flex-start;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}

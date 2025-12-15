@@ -23,58 +23,149 @@
 // };
 
 
-import React from "react";
+// import React from "react";
+// import { useSelector } from "react-redux";
+// import { ModuleType } from "../../../types/store";
+// import { componentMap } from "../../../contentComponents/componentMap";
+
+// interface ModuleRendererProps {
+//   module: ModuleType;
+// }
+
+// export const ModuleRenderer: React.FC<ModuleRendererProps> = ({ module }) => {
+//   const Component = componentMap[module.type];
+
+//   // All API modules in the workspace
+//   const apiModules = useSelector((state: any) =>
+//     (state.modules.items || []).filter((m: ModuleType) => m.type === "api")
+//   );
+
+//   if (!Component) return null;
+
+//   /**
+//    * Start with literal props from Redux
+//    */
+//   const resolvedProps: Record<string, any> = {
+//     ...module.props,
+//   };
+
+//   /**
+//    * 🔗 Resolve bindings (ONLY for non-API modules)
+//    */
+//   if (module.type !== "api" && module.bindings) {
+//     Object.entries(module.bindings).forEach(([propKey, binding]) => {
+//       if (!binding) return;
+
+//       const apiModule = apiModules.find(m => m.id === binding.apiId);
+//       if (!apiModule) return;
+
+//       let value = apiModule.props?.lastData;
+//       if (value == null) return;
+
+//       // walk the path: ["prices", "0", "close"]
+//       for (const segment of binding.path) {
+//         if (value == null) return;
+//         value = value[segment];
+//       }
+
+//       resolvedProps[propKey] = value;
+//     });
+//   }
+
+//   return (
+//     <Component
+//       moduleId={module.id}   // ✅ explicit, never from bindings
+//       {...resolvedProps}
+//       style={{ width: "100%", height: "100%" }}
+//     />
+//   );
+// };
+
+
+
 import { useSelector } from "react-redux";
-import { ModuleType } from "../../../types/store";
 import { componentMap } from "../../../contentComponents/componentMap";
+import { ModuleType } from "../../../types/store";
 
-interface ModuleRendererProps {
-  module: ModuleType;
-}
+const resolveWithMap = (obj: any, path: (string | number)[]) => {
+  let value = obj;
 
-export const ModuleRenderer: React.FC<ModuleRendererProps> = ({ module }) => {
+  for (let i = 0; i < path.length; i++) {
+    const key = path[i];
+
+    if (key === "*") {
+      const rest = path.slice(i + 1);
+      if (!Array.isArray(value)) return undefined;
+      return value.map(v => resolveWithMap(v, rest));
+    }
+
+    value = value?.[key as any];
+  }
+
+  return value;
+};
+
+const sanitizePropValue = (value: any) => {
+  if (
+    value == null ||
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean"
+  ) {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    const isPrimitiveArray = value.every(
+      v =>
+        v == null ||
+        typeof v === "string" ||
+        typeof v === "number" ||
+        typeof v === "boolean"
+    );
+
+    return isPrimitiveArray ? value : undefined;
+  }
+
+  return undefined;
+};
+
+export const ModuleRenderer: React.FC<{ module: ModuleType }> = ({ module }) => {
   const Component = componentMap[module.type];
-
-  // All API modules in the workspace
-  const apiModules = useSelector((state: any) =>
-    (state.modules.items || []).filter((m: ModuleType) => m.type === "api")
-  );
+  const modules = useSelector((state: any) => state.modules.items);
 
   if (!Component) return null;
 
-  /**
-   * Start with literal props from Redux
-   */
-  const resolvedProps: Record<string, any> = {
-    ...module.props,
-  };
+  const resolvedProps = { ...module.props };
 
-  /**
-   * 🔗 Resolve bindings (ONLY for non-API modules)
-   */
-  if (module.type !== "api" && module.bindings) {
-    Object.entries(module.bindings).forEach(([propKey, binding]) => {
+  if (module.bindings) {
+    Object.entries(module.bindings).forEach(([prop, binding]) => {
       if (!binding) return;
 
-      const apiModule = apiModules.find(m => m.id === binding.apiId);
-      if (!apiModule) return;
+      const apiModule = modules.find((m: any) => m.id === binding.apiId);
+      const apiData = apiModule?.props?.lastData;
+      if (!apiData) return;
 
-      let value = apiModule.props?.lastData;
-      if (value == null) return;
+      const rawValue = resolveWithMap(apiData, binding.path);
+      const safeValue = sanitizePropValue(rawValue);
 
-      // walk the path: ["prices", "0", "close"]
-      for (const segment of binding.path) {
-        if (value == null) return;
-        value = value[segment];
+      if (safeValue !== undefined) {
+        resolvedProps[prop] = safeValue;
+      } else {
+        // optional: dev warning
+        if (process.env.NODE_ENV === "development") {
+          console.warn(
+            `[ModuleRenderer] Unsafe value for prop "${prop}" ignored`,
+            rawValue
+          );
+        }
       }
-
-      resolvedProps[propKey] = value;
     });
   }
 
   return (
     <Component
-      moduleId={module.id}   // ✅ explicit, never from bindings
+      moduleId={module.id}
       {...resolvedProps}
       style={{ width: "100%", height: "100%" }}
     />
