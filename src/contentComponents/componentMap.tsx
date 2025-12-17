@@ -23,6 +23,7 @@ import SummaryCard from "./SummaryCard/SummaryCard";
 import DotMatrixImage from "./DotMatrixImage/DotMatrixImage";
 import PlainImage from "./PlainImage";
 import InfoCard from "./InfoCard/InfoCard";
+import TextDisplay from "./TextDisplay/TextDisplay";
 
 import BreedCard from "../tayloredCotent/BreedCard";
 
@@ -92,6 +93,24 @@ export const componentRegistry: Record<string, ComponentDefinition> = {
       // },
       lastData: null,
     }
+  },
+
+  textDisplay: {
+    component: TextDisplay,
+    defaultProps: {
+      text: "",
+      size: "md",
+      weight: "normal",
+      color: "hsl(var(--foreground))",
+      backgroundColor: "transparent",
+      align: "left",
+      italic: false,
+      underline: false,
+      strikethrough: false,
+      uppercase: false,
+      truncate: false,
+      maxLines: undefined,
+    },
   },
 
   plainImage: {
