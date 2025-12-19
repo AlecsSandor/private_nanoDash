@@ -1767,6 +1767,22 @@ export const SidePanel = () => {
             </div>
 
             <div className={classes.group}>
+              <label>Body (JSON)</label>
+              <textarea
+                value={
+                  selectedModule.body
+                    ? JSON.stringify(selectedModule.body, null, 2)
+                    : ""
+                }
+                onChange={(e) => {
+                  try {
+                    updateProp("body", JSON.parse(e.target.value));
+                  } catch {}
+                }}
+              />
+            </div>
+
+            <div className={classes.group}>
               <label>
                 <input
                   type="checkbox"

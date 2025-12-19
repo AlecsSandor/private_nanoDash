@@ -5,13 +5,53 @@
   position: absolute;
   z-index: 1;
 
+  .background {
+    position: absolute;
+    //left: 50%;
+    bottom: 0%;
+
+    .blobGreen {
+      position: absolute;
+      width: 3em;
+      height: 3em;
+      left: 3rem;
+      bottom: 3rem;
+
+      background: linear-gradient(135deg, #77e036, #d2e339);
+      filter: blur(30px);
+      opacity: 0.9;
+    }
+
+    /* yellow blob */
+    .blobYellow {
+      position: absolute;
+      width: 20%;
+      height: 20%;
+      left: -4rem;
+      bottom: 2rem;
+
+      background: #ffff61;
+      filter: blur(80px);
+      opacity: 0.8;
+    }
+  }
+
   .ContentWrapper {
     width: 100%;
     height: 100%;
     padding: 15px;
-    background-color: #1A1A1A;
-    border-radius: 20px;
-    border: 1.5px solid #151515;
+    // background-color: #1A1A1A;
+
+    // fill: rgba(38, 38, 38, 0.21);
+    // stroke-width: 1px;
+    // stroke: #454444;
+    // backdrop-filter: blur(5.349999904632568px);
+
+    background-color: rgba(26, 26, 26, 0.8);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 30px;
+    border: 1.5px solid #202020;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
     transition: all 200ms ease;
     box-sizing: border-box;
@@ -54,7 +94,7 @@
 
   &:hover {
     .ContentWrapper {
-      background-color: #1d1d1d;
+      background-color: rgba(42, 42, 42, 0.2);
     }
   }
 }

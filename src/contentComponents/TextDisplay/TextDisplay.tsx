@@ -88,7 +88,7 @@ const TextDisplay: React.FC<TextDisplayProps> = ({
       }}
       {...props}
     >
-      <Tag
+      <div
         className={textClasses}
         style={{
           color,
@@ -97,7 +97,7 @@ const TextDisplay: React.FC<TextDisplayProps> = ({
         }}
       >
         {text}
-      </Tag>
+      </div>
     </div>
   );
 };

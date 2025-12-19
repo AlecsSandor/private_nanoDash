@@ -93,7 +93,10 @@ function buildUrl(path: string, query?: ApiOptions["query"]) {
 export async function apiRequest<T = any>(
   path: string,
   { method = "GET", headers = {}, body, query, retry = true, skipAuth = false }: ApiOptions = {}
+
 ): Promise<T> {
+  // if (method == "POST" && body !== undefined && typeof body === "string") {
+  // throw new Error("apiRequest body must be an object, not a string");}
   const url = buildUrl(path, query);
   const accessToken = tokenService.getAccessToken();
   const init: RequestInit = {
@@ -105,7 +108,8 @@ export async function apiRequest<T = any>(
       ...headers,
       ...(skipAuth || !accessToken ? {} : { Authorization: `Bearer ${accessToken}` }),
     },
-    body: body !== undefined ? JSON.stringify(body) : undefined,
+    
+    // body: body !== undefined ? JSON.stringify(body) : undefined,
   };
 
 //   console.log("🔐 Sending request:", {

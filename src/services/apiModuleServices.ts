@@ -5,7 +5,7 @@ export interface ApiModuleCallOptions {
   url: string;
   method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   headers?: Record<string, string>;
-  // body?: any;
+  body?: any;
   query?: Record<string, string | number | boolean | undefined>;
 }
 
@@ -14,13 +14,13 @@ export const apiModulesService = {
     url,
     method = "GET",
     headers,
-    // body="{}",
+    body,
     query,
   }: ApiModuleCallOptions): Promise<T> => {
     return apiRequest<T>(url, {
       method,
       headers,
-      // body,
+      body,
       query,
       skipAuth: true, // attach token if available
     });

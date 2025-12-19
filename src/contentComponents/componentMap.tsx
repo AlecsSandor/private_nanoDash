@@ -28,6 +28,7 @@ import TextDisplay from "./TextDisplay/TextDisplay";
 import BreedCard from "../tayloredCotent/BreedCard";
 
 import ApiModule from "../networkComponents/ApiModule/ApiModule";
+import ParserModule from "../networkComponents/ParserModule/ParserModule";
 
 
 
@@ -92,6 +93,17 @@ export const componentRegistry: Record<string, ComponentDefinition> = {
       lastFetchError: null,
       // },
       lastData: null,
+    }
+  },
+
+  parser: {
+    component: ParserModule,
+    defaultProps: {
+      sourceModuleId: undefined,
+      schema: { type: "passthrough" },
+      lastData: null,
+      lastParseError: null,
+      lastParsedAt: null
     }
   },
 

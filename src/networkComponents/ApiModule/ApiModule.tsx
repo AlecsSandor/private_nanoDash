@@ -13,10 +13,11 @@ interface ApiModuleFullProps extends ApiModuleProps {
 
 const ApiModule: React.FC<ApiModuleFullProps> = ({
   moduleId,
- name,
+  name,
   url,
   method,
   headers,
+  body,
   enabled,
   refreshIntervalMs,
   responseSchema,
@@ -34,12 +35,12 @@ const ApiModule: React.FC<ApiModuleFullProps> = ({
 
   const handleFetch = async () => {
     if (!url) return;
-    
+
     dispatch(updateModuleProps({ id: moduleId, key: "isFetching", value: true }));
     dispatch(updateModuleProps({ id: moduleId, key: "lastFetchError", value: null }));
-  
+
     try {
-      const data = await apiModulesService.fetchApiModuleData({ url, method, headers });
+      const data = await apiModulesService.fetchApiModuleData({ url, method, headers, body });
 
       dispatch(updateModuleProps({ id: moduleId, key: "lastData", value: data }));
       dispatch(updateModuleProps({ id: moduleId, key: "lastFetchedAt", value: Date.now() }));
@@ -79,6 +80,11 @@ const ApiModule: React.FC<ApiModuleFullProps> = ({
         <button className={classes.fetchButton} onClick={handleFetch}>
           Fetch
         </button>
+      </div>
+
+      <div className={classes.section}>
+        <div className={classes.label}>Body</div>
+        <div className={classes.value}>{body ? JSON.stringify(body, null, 2) : "{}"}</div>
       </div>
 
       <div className={classes.statusBox}>

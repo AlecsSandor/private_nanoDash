@@ -99,6 +99,7 @@ export interface ApiModuleProps {
   url: string;
   method: "GET" | "POST";
   headers: Record<string, string>;
+  body: Record<string, string>;
   enabled: boolean;
   refreshIntervalMs: number;
   responseSchema: any | null;
@@ -113,6 +114,77 @@ export interface ApiModuleProps {
 
   lastData: any;
 }
+
+// export interface ParserModuleProps {
+//   sourceModuleId
+//   input: Record<string, string>;
+//   output: Record<string, string>;
+// }
+
+// types/store.ts
+
+export interface ArrayMapSchema {
+  type: "array-map";
+
+  /**
+   * Maps object keys to array indices
+   * Example:
+   * {
+   *   open: 1,
+   *   high: 2,
+   *   low: 3,
+   *   close: 4
+   * }
+   */
+  fields: Record<string, number>;
+
+  /** Optional: convert values to numbers */
+  castToNumber?: boolean;
+
+  /** Optional: slice array length */
+  limit?: number;
+}
+
+export interface ObjectMapSchema {
+  type: "object-map";
+
+  /**
+   * Maps output keys to input paths
+   * Example:
+   * {
+   *   price: ["data", "price"],
+   *   volume: ["stats", "volume"]
+   * }
+   */
+  fields: Record<string, (string | number)[]>;
+}
+
+export interface PassThroughSchema {
+  type: "passthrough";
+}
+
+export type ParserSchema =
+  | ArrayMapSchema
+  | ObjectMapSchema
+  | PassThroughSchema;
+
+export interface ParserModuleProps {
+  /** Which module provides the input data */
+  sourceModuleId?: string;
+
+  /** How the input data should be transformed */
+  schema?: ParserSchema;
+
+  /** Result of the parsing/transformation */
+  lastData?: any;
+
+  /** Error if parsing fails */
+  lastParseError?: string | null;
+
+  /** Metadata */
+  lastParsedAt?: number;
+}
+
 
 export type ModuleType =
   | {

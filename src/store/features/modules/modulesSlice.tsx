@@ -75,11 +75,12 @@ const modulesSlice = createSlice({
     },
     updateModuleProps(state, action) {
       const { id, key, value } = action.payload;
-
+ 
       const mod = state.items.find((m) => m.id === id);
       if (mod) {
         mod.props = { ...mod.props, [key]: value };
       }
+      console.log(mod?.props)
     },
     updateModuleType: (state, action) => {
       const { id, type } = action.payload;
@@ -91,6 +92,7 @@ const modulesSlice = createSlice({
         const defaults = componentRegistry[type]?.defaultProps || {};
         mod.props = { ...defaults };
       }
+
     },
     updateModuleBinding: (state, action: PayloadAction<BindingPayload>) => {
       const { id, prop, apiId, path } = action.payload;

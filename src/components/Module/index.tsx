@@ -188,6 +188,10 @@ const ModuleComponent: React.FC<ModuleProps> = ({
       }}
       onMouseDown={handleMouseDown}
     >
+      {/* <div className={classes.background}>
+        <div className={classes.blobGreen} />
+        <div className={classes.blobYellow} />
+      </div> */}
       <div className={classes.ContentWrapper}>
         <div className={classes.titleWrapper}>
           <p className={classes.title}>{title}</p>
@@ -204,3 +208,46 @@ const ModuleComponent: React.FC<ModuleProps> = ({
 
 export const Module = React.memo(ModuleComponent);
 export default Module;
+
+
+
+{/* <svg xmlns="http://www.w3.org/2000/svg" width="225" height="224" viewBox="0 0 225 224" fill="none">
+<foreignObject x="-10.7" y="-10.7" width="246.4" height="245.4"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(5.35px);clip-path:url(#bgblur_1_6156_1051_clip_path);height:100%;width:100%"></div></foreignObject><g data-figma-bg-blur-radius="10.7">
+<g clip-path="url(#clip0_6156_1051)">
+<rect width="225" height="224" rx="32" fill="#262626" fill-opacity="0.51"/>
+<g filter="url(#filter1_f_6156_1051)">
+<ellipse cx="66.4626" cy="231.515" rx="52.5" ry="50" transform="rotate(-11.5717 66.4626 231.515)" fill="url(#paint0_linear_6156_1051)"/>
+</g>
+<g filter="url(#filter2_f_6156_1051)">
+<ellipse cx="-13.5374" cy="166.515" rx="52.5" ry="50" transform="rotate(-11.5717 -13.5374 166.515)" fill="#FFFF61"/>
+</g>
+</g>
+<rect x="0.5" y="0.5" width="224" height="223" rx="31.5" stroke="url(#paint1_linear_6156_1051)"/>
+</g>
+<defs>
+<clipPath id="bgblur_1_6156_1051_clip_path" transform="translate(10.7 10.7)"><rect width="225" height="224" rx="32"/>
+</clipPath><filter id="filter1_f_6156_1051" x="-65.649" y="101.701" width="264.223" height="259.627" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="39.85" result="effect1_foregroundBlur_6156_1051"/>
+</filter>
+<filter id="filter2_f_6156_1051" x="-145.649" y="36.7014" width="264.223" height="259.627" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="39.85" result="effect1_foregroundBlur_6156_1051"/>
+</filter>
+<linearGradient id="paint0_linear_6156_1051" x1="113.963" y1="181.515" x2="18.9626" y2="281.515" gradientUnits="userSpaceOnUse">
+<stop stop-color="#77E036"/>
+<stop offset="1" stop-color="#D2E339"/>
+</linearGradient>
+<linearGradient id="paint1_linear_6156_1051" x1="225" y1="0" x2="16" y2="230" gradientUnits="userSpaceOnUse">
+<stop stop-color="#454444"/>
+<stop offset="0.322115" stop-color="#252525"/>
+<stop offset="0.644231" stop-color="#2B2B2B"/>
+<stop offset="1" stop-color="#454444"/>
+</linearGradient>
+<clipPath id="clip0_6156_1051">
+<rect width="225" height="224" rx="32" fill="white"/>
+</clipPath>
+</defs>
+</svg> */}
