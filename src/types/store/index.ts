@@ -147,7 +147,7 @@ export interface ArrayMapSchema {
 
 export interface ObjectMapSchema {
   type: "object-map";
-
+  mode?: "each";
   /**
    * Maps output keys to input paths
    * Example:

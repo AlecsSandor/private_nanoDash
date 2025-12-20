@@ -100,7 +100,14 @@ export const componentRegistry: Record<string, ComponentDefinition> = {
     component: ParserModule,
     defaultProps: {
       sourceModuleId: undefined,
-      schema: { type: "passthrough" },
+      schema: {
+        type: "array-map", fields: {
+          open: 1,
+          high: 2,
+          low: 3,
+          close: 4
+        }, castToNumber: true
+      },
       lastData: null,
       lastParseError: null,
       lastParsedAt: null

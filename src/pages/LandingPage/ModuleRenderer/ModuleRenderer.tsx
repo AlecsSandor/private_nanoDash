@@ -105,7 +105,45 @@ const resolveWithMap = (obj: any, path: (string | number)[]) => {
   return value;
 };
 
-const sanitizePropValue = (value: any) => {
+// const sanitizePropValue = (value: any) => {
+//   if (
+//     value == null ||
+//     typeof value === "string" ||
+//     typeof value === "number" ||
+//     typeof value === "boolean"
+//   ) {
+//     return value;
+//   }
+
+//   if (Array.isArray(value)) {
+//     const isPrimitiveArray = value.every(
+//       v =>
+//         v == null ||
+//         typeof v === "string" ||
+//         typeof v === "number" ||
+//         typeof v === "boolean"
+//     );
+
+//     return isPrimitiveArray ? value : undefined;
+//   }
+
+//   return undefined;
+// };
+
+const componentsAllowingObjectText = new Set([
+  "textDisplay",
+  "infoCard",
+  "summaryCard",
+  "barStatCard",
+  "segmentedStatCard",
+  "waveformStatCard"
+]);
+
+const isPlainObject = (v: any) =>
+  Object.prototype.toString.call(v) === "[object Object]";
+
+const sanitizePropValue = (value: any, moduleType: any) => {
+  // primitives
   if (
     value == null ||
     typeof value === "string" ||
@@ -115,18 +153,30 @@ const sanitizePropValue = (value: any) => {
     return value;
   }
 
+  // arrays (allow arrays of objects)
   if (Array.isArray(value)) {
-    const isPrimitiveArray = value.every(
+    const isSafeArray = value.every(
       v =>
         v == null ||
         typeof v === "string" ||
         typeof v === "number" ||
-        typeof v === "boolean"
+        typeof v === "boolean" ||
+        (isPlainObject(v) && !componentsAllowingObjectText.has(moduleType)) // block objects not allowed in TextDisplay
     );
 
-    return isPrimitiveArray ? value : undefined;
+    return isSafeArray ? value : undefined;
   }
 
+  // // plain objects (ONLY allowed if explicitly bound)
+  // if (isPlainObject(value)) {
+  //   return value;
+  // }
+
+  if (isPlainObject(value)) {
+  return undefined; // block objects entirely
+}
+
+  // everything else is unsafe
   return undefined;
 };
 
@@ -147,8 +197,8 @@ export const ModuleRenderer: React.FC<{ module: ModuleType }> = ({ module }) => 
       if (!apiData) return;
 
       const rawValue = resolveWithMap(apiData, binding.path);
-      const safeValue = sanitizePropValue(rawValue);
-
+      const safeValue = sanitizePropValue(rawValue, module.type);
+      console.log(safeValue)
       if (safeValue !== undefined) {
         resolvedProps[prop] = safeValue;
       } else {

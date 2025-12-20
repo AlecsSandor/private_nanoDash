@@ -80,7 +80,8 @@ const modulesSlice = createSlice({
       if (mod) {
         mod.props = { ...mod.props, [key]: value };
       }
-      console.log(mod?.props)
+      // console.log(mod?.id)
+      // console.log(mod?.props)
     },
     updateModuleType: (state, action) => {
       const { id, type } = action.payload;

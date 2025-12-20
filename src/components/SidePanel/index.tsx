@@ -1358,7 +1358,7 @@
 // export default SidePanel;
 
 
-
+//###########################################################################
 
 
 import React from "react";
@@ -1378,12 +1378,12 @@ import classes from "./styles.module.scss";
 // "*" means "map over array and extract sub-path from each element"
 const resolvePath = (obj: any, path: (string | number)[]): any => {
   let current = obj;
-  
+
   for (let i = 0; i < path.length; i++) {
     if (current == null) return undefined;
-    
+
     const key = path[i];
-    
+
     if (key === "*") {
       // Wildcard: map over array and resolve remaining path for each element
       if (!Array.isArray(current)) return undefined;
@@ -1391,10 +1391,10 @@ const resolvePath = (obj: any, path: (string | number)[]): any => {
       if (remainingPath.length === 0) return current;
       return current.map((item) => resolvePath(item, remainingPath));
     }
-    
+
     current = current[key as any];
   }
-  
+
   return current;
 };
 
@@ -1424,47 +1424,185 @@ interface PathSelectorProps {
   onChange: (newPath: (string | number)[]) => void;
 }
 
-const PathSelector: React.FC<PathSelectorProps> = ({ rootData, currentPath, onChange }) => {
+// const PathSelector: React.FC<PathSelectorProps> = ({ rootData, currentPath, onChange }) => {
+//   const hasWildcard = currentPath.includes("*");
+//   const wildcardIndex = currentPath.indexOf("*");
+
+//   // Build selectors for each segment
+//   const selectors: React.ReactNode[] = [];
+
+//   let i = 0;
+//   while (i <= currentPath.length) {
+//     const pathUpToHere = currentPath.slice(0, i);
+//     const isAtWildcard = currentPath[i] === "*";
+
+//     // Resolve value at this point (stop at wildcard for preview)
+//     let valueAtPath: any;
+//     if (hasWildcard && i > wildcardIndex) {
+//       // After wildcard: get first element's structure for preview
+//       const beforeWildcard = currentPath.slice(0, wildcardIndex);
+//       const arrayValue = resolvePath(rootData, beforeWildcard);
+//       if (Array.isArray(arrayValue) && arrayValue.length > 0) {
+//         const afterWildcardPath = currentPath.slice(wildcardIndex + 1, i);
+//         valueAtPath = resolvePath(arrayValue[0], afterWildcardPath);
+//       }
+//     } else {
+//       valueAtPath = resolvePath(rootData, pathUpToHere);
+//     }
+
+//     const type = getValueType(valueAtPath);
+
+//     if (type === "primitive") break;
+
+//     const currentKey = currentPath[i];
+
+//     if (type === "array") {
+//       selectors.push(
+//         <select
+//           key={`sel-${i}`}
+//           value={currentKey === "*" ? "*" : (typeof currentKey === "number" ? currentKey : "__select__")}
+//           onChange={(e) => {
+//             const val = e.target.value;
+//             let newPath: (string | number)[];
+
+//             if (val === "__select__") {
+//               newPath = currentPath.slice(0, i);
+//             } else if (val === "*") {
+//               newPath = [...currentPath.slice(0, i), "*"];
+//             } else {
+//               newPath = [...currentPath.slice(0, i), Number(val)];
+//             }
+//             onChange(newPath);
+//           }}
+//         >
+//           <option value="__select__">— select —</option>
+//           <option value="*">✱ each element (map)</option>
+//           {valueAtPath.map((_: any, idx: number) => (
+//             <option key={idx} value={idx}>[{idx}]</option>
+//           ))}
+//         </select>
+//       );
+//     } else if (type === "object") {
+//       selectors.push(
+//         <select
+//           key={`sel-${i}`}
+//           value={typeof currentKey === "string" && currentKey !== "*" ? currentKey : "__select__"}
+//           onChange={(e) => {
+//             const val = e.target.value;
+//             if (val === "__select__") {
+//               onChange(currentPath.slice(0, i));
+//             } else {
+//               onChange([...currentPath.slice(0, i), val]);
+//             }
+//           }}
+//         >
+//           <option value="__select__">— select key —</option>
+//           {Object.keys(valueAtPath).map((k) => (
+//             <option key={k} value={k}>{k}</option>
+//           ))}
+//         </select>
+//       );
+//     }
+
+//     if (currentKey === undefined || currentKey === "__select__") break;
+//     i++;
+//   }
+
+//   return <div className={classes.pathSelectors}>{selectors}</div>;
+// };
+
+const PathSelector: React.FC<PathSelectorProps> = ({
+  rootData,
+  currentPath,
+  onChange,
+}) => {
+  const useRoot = currentPath.length === 0;
+
+  // ---- ROOT VALUE SELECTOR (DEFAULT) ----
+  // const rootSelector = (
+  //   <select
+  //     // value={useRoot ? "__root__" : "__custom__"}
+  //     onChange={(e) => {
+  //       if (e.target.value === "__root__") {
+  //         onChange([]);
+  //       }
+  //     }}
+  //   >
+  //     <option value="__root__">✓ Use entire value (no mapping)</option>
+  //     <option value="__custom__">Custom path…</option>
+  //   </select>
+  // );
+  const rootSelector = (
+  <select
+    value={useRoot ? "__root__" : "__custom__"}
+    onChange={(e) => {
+      if (e.target.value === "__root__") {
+        onChange([]);
+      } else {
+        onChange(["__select__"]); // enter custom mode
+      }
+    }}
+  >
+    <option value="__root__">✓ Use entire value (no mapping)</option>
+    <option value="__custom__">Custom path…</option>
+  </select>
+);
+
+  // If user wants raw value → stop here
+  if (useRoot) {
+    return (
+      <div className={classes.pathSelectors}>
+        {rootSelector}
+      </div>
+    );
+  }
+
+  // ---- CUSTOM PATH SELECTORS ----
+  const selectors: React.ReactNode[] = [];
   const hasWildcard = currentPath.includes("*");
   const wildcardIndex = currentPath.indexOf("*");
-  
-  // Build selectors for each segment
-  const selectors: React.ReactNode[] = [];
-  
+
   let i = 0;
+
   while (i <= currentPath.length) {
     const pathUpToHere = currentPath.slice(0, i);
-    const isAtWildcard = currentPath[i] === "*";
-    
-    // Resolve value at this point (stop at wildcard for preview)
+
+    // Resolve preview value
     let valueAtPath: any;
+
     if (hasWildcard && i > wildcardIndex) {
-      // After wildcard: get first element's structure for preview
       const beforeWildcard = currentPath.slice(0, wildcardIndex);
       const arrayValue = resolvePath(rootData, beforeWildcard);
+
       if (Array.isArray(arrayValue) && arrayValue.length > 0) {
-        const afterWildcardPath = currentPath.slice(wildcardIndex + 1, i);
-        valueAtPath = resolvePath(arrayValue[0], afterWildcardPath);
+        const afterWildcard = currentPath.slice(wildcardIndex + 1, i);
+        valueAtPath = resolvePath(arrayValue[0], afterWildcard);
       }
     } else {
       valueAtPath = resolvePath(rootData, pathUpToHere);
     }
-    
+
     const type = getValueType(valueAtPath);
-    
     if (type === "primitive") break;
-    
+
     const currentKey = currentPath[i];
-    
+
+    // ---- ARRAY ----
     if (type === "array") {
       selectors.push(
         <select
           key={`sel-${i}`}
-          value={currentKey === "*" ? "*" : (typeof currentKey === "number" ? currentKey : "__select__")}
+          value={
+            currentKey === "*"
+              ? "*"
+              : typeof currentKey === "number"
+              ? currentKey
+              : "__select__"
+          }
           onChange={(e) => {
             const val = e.target.value;
             let newPath: (string | number)[];
-            
+
             if (val === "__select__") {
               newPath = currentPath.slice(0, i);
             } else if (val === "*") {
@@ -1472,21 +1610,31 @@ const PathSelector: React.FC<PathSelectorProps> = ({ rootData, currentPath, onCh
             } else {
               newPath = [...currentPath.slice(0, i), Number(val)];
             }
+
             onChange(newPath);
           }}
         >
           <option value="__select__">— select —</option>
           <option value="*">✱ each element (map)</option>
           {valueAtPath.map((_: any, idx: number) => (
-            <option key={idx} value={idx}>[{idx}]</option>
+            <option key={idx} value={idx}>
+              [{idx}]
+            </option>
           ))}
         </select>
       );
-    } else if (type === "object") {
+    }
+
+    // ---- OBJECT ----
+    if (type === "object") {
       selectors.push(
         <select
           key={`sel-${i}`}
-          value={typeof currentKey === "string" && currentKey !== "*" ? currentKey : "__select__"}
+          value={
+            typeof currentKey === "string" && currentKey !== "*"
+              ? currentKey
+              : "__select__"
+          }
           onChange={(e) => {
             const val = e.target.value;
             if (val === "__select__") {
@@ -1498,26 +1646,33 @@ const PathSelector: React.FC<PathSelectorProps> = ({ rootData, currentPath, onCh
         >
           <option value="__select__">— select key —</option>
           {Object.keys(valueAtPath).map((k) => (
-            <option key={k} value={k}>{k}</option>
+            <option key={k} value={k}>
+              {k}
+            </option>
           ))}
         </select>
       );
     }
-    
+
     if (currentKey === undefined || currentKey === "__select__") break;
     i++;
   }
-  
-  return <div className={classes.pathSelectors}>{selectors}</div>;
+
+  return (
+    <div className={classes.pathSelectors}>
+      {rootSelector}
+      {selectors}
+    </div>
+  );
 };
 
 // Preview the resolved value
 const BindingPreview: React.FC<{ value: any }> = ({ value }) => {
   if (value === undefined) return <span className={classes.previewEmpty}>No data</span>;
-  
+
   const preview = JSON.stringify(value, null, 2);
   const truncated = preview.length > 200 ? preview.slice(0, 200) + "..." : preview;
-  
+
   return (
     <pre className={classes.preview}>
       {truncated}
@@ -1534,6 +1689,16 @@ export const SidePanel = () => {
 
   const selectedModule = modules.find((m: any) => m.id === selectedModuleId);
   const apiModules = modules.filter((m: any) => m.type === "api");
+
+  /* ⬇️ ADD THESE LINES HERE ⬇️ */
+  const isParser = selectedModule?.type === "parser";
+  const parserModules = modules.filter(
+    (m) => m.type === "parser"
+  );
+
+  const allDataModules = modules.filter(
+    (m: any) => m.type === "api" || m.type === "parser"
+  );
 
   const [tempX, setTempX] = React.useState(0);
   const [tempY, setTempY] = React.useState(0);
@@ -1611,7 +1776,7 @@ export const SidePanel = () => {
         onChange={(e) => {
           try {
             updateProp(key, JSON.parse(e.target.value));
-          } catch {}
+          } catch { }
         }}
       />
     );
@@ -1695,8 +1860,8 @@ export const SidePanel = () => {
         </div>
 
         {/* API Settings - unchanged */}
-                 {/* ========================================== API MODULE SETTINGS (flat props) ========================================== */}
-         {selectedModule.type === "api" && (
+        {/* ========================================== API MODULE SETTINGS (flat props) ========================================== */}
+        {selectedModule.type === "api" && (
           <>
             <h3 className={classes.sectionTitle}>API Settings</h3>
 
@@ -1704,7 +1869,8 @@ export const SidePanel = () => {
               <label>Name</label>
               <input
                 type="text"
-                value={selectedModule.name ?? ""}
+                //value={selectedModule.name ?? ""}
+                defaultValue={selectedModule?.name ?? ""}
                 onChange={(e) => updateProp("name", e.target.value)}
               />
             </div>
@@ -1713,7 +1879,7 @@ export const SidePanel = () => {
               <label>URL</label>
               <input
                 type="text"
-                value={selectedModule.url ?? ""}
+                //value={selectedModule.url ?? ""}
                 onChange={(e) => updateProp("url", e.target.value)}
               />
             </div>
@@ -1721,7 +1887,7 @@ export const SidePanel = () => {
             <div className={classes.group}>
               <label>Method</label>
               <select
-                value={selectedModule.method ?? "GET"}
+                //value={selectedModule.method ?? "GET"}
                 onChange={(e) => updateProp("method", e.target.value)}
               >
                 <option>GET</option>
@@ -1736,15 +1902,15 @@ export const SidePanel = () => {
               <div className={classes.group}>
                 <label>Body (JSON)</label>
                 <textarea
-                  value={
-                    selectedModule.body
-                      ? JSON.stringify(selectedModule.body, null, 2)
-                      : ""
-                  }
+                  // value={
+                  //   selectedModule.body
+                  //     ? JSON.stringify(selectedModule.body, null, 2)
+                  //     : ""
+                  // }
                   onChange={(e) => {
                     try {
                       updateProp("body", JSON.parse(e.target.value));
-                    } catch {}
+                    } catch { }
                   }}
                 />
               </div>
@@ -1753,15 +1919,15 @@ export const SidePanel = () => {
             <div className={classes.group}>
               <label>Headers (JSON)</label>
               <textarea
-                value={
-                  selectedModule.headers
-                    ? JSON.stringify(selectedModule.headers, null, 2)
-                    : "{}"
-                }
+                // value={
+                //   selectedModule.headers
+                //     ? JSON.stringify(selectedModule.headers, null, 2)
+                //     : "{}"
+                // }
                 onChange={(e) => {
                   try {
                     updateProp("headers", JSON.parse(e.target.value));
-                  } catch {}
+                  } catch { }
                 }}
               />
             </div>
@@ -1769,15 +1935,15 @@ export const SidePanel = () => {
             <div className={classes.group}>
               <label>Body (JSON)</label>
               <textarea
-                value={
-                  selectedModule.body
-                    ? JSON.stringify(selectedModule.body, null, 2)
-                    : ""
-                }
+                // value={
+                //   selectedModule.body
+                //     ? JSON.stringify(selectedModule.body, null, 2)
+                //     : ""
+                // }
                 onChange={(e) => {
                   try {
                     updateProp("body", JSON.parse(e.target.value));
-                  } catch {}
+                  } catch { }
                 }}
               />
             </div>
@@ -1799,7 +1965,7 @@ export const SidePanel = () => {
               <label>Refresh Interval (ms)</label>
               <input
                 type="number"
-                value={selectedModule.refreshIntervalMs ?? 0}
+                // value={selectedModule.refreshIntervalMs ?? 0}
                 onChange={(e) =>
                   updateProp(
                     "refreshIntervalMs",
@@ -1813,7 +1979,7 @@ export const SidePanel = () => {
               <label>Transform Path</label>
               <input
                 type="text"
-                value={selectedModule.transformPath ?? ""}
+                // value={selectedModule.transformPath ?? ""}
                 onChange={(e) =>
                   updateProp("transformPath", e.target.value)
                 }
@@ -1824,8 +1990,107 @@ export const SidePanel = () => {
           </>
         )}
 
+        {/* PARSER Settings - unchanged */}
+        {/* ========================================== PARSER MODULE SETTINGS (flat props) ========================================== */}
+        {selectedModule.type === "parser" && (
+          <>
+            <h3 className={classes.sectionTitle}>Parser Settings</h3>
+
+            {/* Input source */}
+            <div className={classes.group}>
+              <label>Input Module</label>
+              <select
+                value={selectedModule.props?.sourceModuleId || ""}
+                onChange={(e) =>
+                  updateProp("sourceModuleId", e.target.value || undefined)
+                }
+              >
+                <option value="">— select source —</option>
+                {allDataModules
+                  .filter((m) => m.id !== selectedModule.id)
+                  .map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.name || m.id} ({m.type})
+                    </option>
+                  ))}
+              </select>
+            </div>
+
+            {/* Schema type */}
+            <div className={classes.group}>
+              <label>Parser Type</label>
+              <select
+                value={selectedModule.props?.schema?.type || "passthrough"}
+                onChange={(e) => {
+                  const type = e.target.value;
+                  let schema;
+
+                  if (type === "array-map") {
+                    schema = { type, fields: {}, castToNumber: true };
+                  } else if (type === "object-map") {
+                    schema = { type, fields: {} };
+                  } else if (type === "object-map(each)") {
+                    schema = { type, mode:"each", fields: {} };
+                  }else {
+                    schema = { type: "passthrough" };
+                  }
+
+                  updateProp("schema", schema);
+                }}
+              >
+                <option value="passthrough">Pass Through</option>
+                <option value="array-map">Array → Objects</option>
+                <option value="object-map">Object → Object</option>
+                <option value="object-map(each)">Object → Object (each)</option>
+              </select>
+            </div>
+
+            {/* Schema editor */}
+            {(() => {
+              const schema = selectedModule.props?.schema;
+              if (!schema || schema.type === "passthrough") return null;
+
+              return (
+                <div className={classes.group}>
+                  <label>Schema Fields</label>
+
+                  <textarea
+                    // value={JSON.stringify(schema.fields || {}, null, 2)}
+                    onChange={(e) => {
+                      try {
+                        updateProp("schema", {
+                          ...schema,
+                          fields: JSON.parse(e.target.value),
+                        });
+                      } catch { }
+                    }}
+                    placeholder={
+                      schema.type === "array-map"
+                        ? `{ "open": 1, "high": 2, "low": 3, "close": 4 }`
+                        : `{ "price": ["data", "price"] }`
+                    }
+                  />
+                </div>
+              );
+            })()}
+
+            {/* Output preview */}
+            <div className={classes.group}>
+              <label>Parsed Output Preview</label>
+              <pre className={classes.preview}>
+                {selectedModule.props?.lastData
+                  ? JSON.stringify(selectedModule.props.lastData, null, 2)
+                  : "No parsed data"}
+              </pre>
+            </div>
+
+            <div className={classes.separator} />
+          </>
+        )}
+
+
         {/* Component Props with enhanced binding */}
-        {selectedModule.type !== "api" && (
+        {selectedModule.type !== "api" && selectedModule.type !== "parser"  && (
           <>
             <h3 className={classes.sectionTitle}>Component Props</h3>
 
@@ -1843,7 +2108,7 @@ export const SidePanel = () => {
                       onChange={(e) => updateBinding(key, e.target.value || null, [])}
                     >
                       <option value="">— bind to API —</option>
-                      {apiModules.map((api) => (
+                      {parserModules.map((api) => (
                         <option key={api.id} value={api.id}>
                           {api.name || api.id}
                         </option>
@@ -1851,9 +2116,9 @@ export const SidePanel = () => {
                     </select>
 
                     {binding?.apiId && (() => {
-                      const api = apiModules.find((m) => m.id === binding.apiId);
+                      const api = parserModules.find((m) => m.id === binding.apiId);
                       const rootData = api?.props?.lastData;
-                      
+
                       if (!rootData) return <span>No data from API</span>;
 
                       const resolvedValue = resolvePath(rootData, binding.path || []);
