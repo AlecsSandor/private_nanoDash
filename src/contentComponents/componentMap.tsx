@@ -133,11 +133,21 @@ export const componentRegistry: Record<string, ComponentDefinition> = {
   },
 
   plainImage: {
-    component: PlainImage,
-    defaultProps: {
-      imgSource: "",
-    },
+  component: PlainImage,
+  defaultProps: {
+    images: "",
+    layout: "single",        // e.g. "single" | "row" | "grid"
+    fit: "cover",            // e.g. "cover" | "contain"
+    sizing: "auto",          // "fixed" | "auto" | "equal"
+    fixedWidth: undefined,
+    fixedHeight: undefined,
+    itemsPerRow: 3,
+    gap: 8,
+    borderRadius: 0,
+    showLabels: false,
+    labelPosition: "bottom",
   },
+},
 
   breedCard: {
     component: BreedCard,

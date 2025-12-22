@@ -1533,20 +1533,20 @@ const PathSelector: React.FC<PathSelectorProps> = ({
   //   </select>
   // );
   const rootSelector = (
-  <select
-    value={useRoot ? "__root__" : "__custom__"}
-    onChange={(e) => {
-      if (e.target.value === "__root__") {
-        onChange([]);
-      } else {
-        onChange(["__select__"]); // enter custom mode
-      }
-    }}
-  >
-    <option value="__root__">✓ Use entire value (no mapping)</option>
-    <option value="__custom__">Custom path…</option>
-  </select>
-);
+    <select
+      value={useRoot ? "__root__" : "__custom__"}
+      onChange={(e) => {
+        if (e.target.value === "__root__") {
+          onChange([]);
+        } else {
+          onChange(["__select__"]); // enter custom mode
+        }
+      }}
+    >
+      <option value="__root__">✓ Use entire value (no mapping)</option>
+      <option value="__custom__">Custom path…</option>
+    </select>
+  );
 
   // If user wants raw value → stop here
   if (useRoot) {
@@ -1596,8 +1596,8 @@ const PathSelector: React.FC<PathSelectorProps> = ({
             currentKey === "*"
               ? "*"
               : typeof currentKey === "number"
-              ? currentKey
-              : "__select__"
+                ? currentKey
+                : "__select__"
           }
           onChange={(e) => {
             const val = e.target.value;
@@ -1792,73 +1792,75 @@ export const SidePanel = () => {
       </div>
 
       <div className={classes.content}>
-        {/* Position/Size controls - unchanged */}
-        <div className={classes.group}>
-          <label>Position X</label>
-          <input
-            type="number"
-            value={tempX}
-            onChange={(e) => {
-              const val = Number(e.target.value);
-              setTempX(val);
-              dispatch(updateModulePosition({ id: selectedModule.id, x: val, y: tempY }));
-            }}
-          />
-        </div>
+        <div className={classes.generalContentWrapper}>
+          {/* Position/Size controls - unchanged */}
+          <div className={classes.group}>
+            <label>Position X</label>
+            <input
+              type="number"
+              value={tempX}
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                setTempX(val);
+                dispatch(updateModulePosition({ id: selectedModule.id, x: val, y: tempY }));
+              }}
+            />
+          </div>
 
-        <div className={classes.group}>
-          <label>Position Y</label>
-          <input
-            type="number"
-            value={tempY}
-            onChange={(e) => {
-              const val = Number(e.target.value);
-              setTempY(val);
-              dispatch(updateModulePosition({ id: selectedModule.id, x: tempX, y: val }));
-            }}
-          />
-        </div>
+          <div className={classes.group}>
+            <label>Position Y</label>
+            <input
+              type="number"
+              value={tempY}
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                setTempY(val);
+                dispatch(updateModulePosition({ id: selectedModule.id, x: tempX, y: val }));
+              }}
+            />
+          </div>
 
-        <div className={classes.group}>
-          <label>Width</label>
-          <input
-            type="number"
-            value={tempW}
-            onChange={(e) => {
-              const val = Number(e.target.value);
-              setTempW(val);
-              dispatch(updateModuleSize({ id: selectedModule.id, width: val, height: tempH }));
-            }}
-          />
-        </div>
+          <div className={classes.group}>
+            <label>Width</label>
+            <input
+              type="number"
+              value={tempW}
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                setTempW(val);
+                dispatch(updateModuleSize({ id: selectedModule.id, width: val, height: tempH }));
+              }}
+            />
+          </div>
 
-        <div className={classes.group}>
-          <label>Height</label>
-          <input
-            type="number"
-            value={tempH}
-            onChange={(e) => {
-              const val = Number(e.target.value);
-              setTempH(val);
-              dispatch(updateModuleSize({ id: selectedModule.id, width: tempW, height: val }));
-            }}
-          />
-        </div>
+          <div className={classes.group}>
+            <label>Height</label>
+            <input
+              type="number"
+              value={tempH}
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                setTempH(val);
+                dispatch(updateModuleSize({ id: selectedModule.id, width: tempW, height: val }));
+              }}
+            />
+          </div>
 
-        <div className={classes.group}>
-          <label>Component Type</label>
-          <select
-            value={selectedModule.type}
-            onChange={(e) =>
-              dispatch(updateModuleType({ id: selectedModule.id, type: e.target.value }))
-            }
-          >
-            {Object.keys(componentMap).map((typeKey) => (
-              <option key={typeKey} value={typeKey}>{typeKey}</option>
-            ))}
-          </select>
+          <div className={classes.group}>
+            <label>Component Type</label>
+            <select
+              value={selectedModule.type}
+              onChange={(e) =>
+                dispatch(updateModuleType({ id: selectedModule.id, type: e.target.value }))
+              }
+            >
+              {Object.keys(componentMap).map((typeKey) => (
+                <option key={typeKey} value={typeKey}>{typeKey}</option>
+              ))}
+            </select>
+          </div>
         </div>
-
+        <div className={classes.generalContentWrapper}>
         {/* API Settings - unchanged */}
         {/* ========================================== API MODULE SETTINGS (flat props) ========================================== */}
         {selectedModule.type === "api" && (
@@ -2030,8 +2032,8 @@ export const SidePanel = () => {
                   } else if (type === "object-map") {
                     schema = { type, fields: {} };
                   } else if (type === "object-map(each)") {
-                    schema = { type, mode:"each", fields: {} };
-                  }else {
+                    schema = { type, mode: "each", fields: {} };
+                  } else {
                     schema = { type: "passthrough" };
                   }
 
@@ -2090,7 +2092,7 @@ export const SidePanel = () => {
 
 
         {/* Component Props with enhanced binding */}
-        {selectedModule.type !== "api" && selectedModule.type !== "parser"  && (
+        {selectedModule.type !== "api" && selectedModule.type !== "parser" && (
           <>
             <h3 className={classes.sectionTitle}>Component Props</h3>
 
@@ -2140,6 +2142,7 @@ export const SidePanel = () => {
             })}
           </>
         )}
+        </div>
       </div>
     </div>
   );
