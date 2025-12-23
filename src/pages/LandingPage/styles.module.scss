@@ -12,3 +12,12 @@
 
     }
 }
+
+@media screen and (max-width: 1024px) {
+
+  .AppHeader {
+    display: flex;
+    flex-direction: row;
+  }
+
+}

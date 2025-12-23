@@ -24,6 +24,7 @@ import DotMatrixImage from "./DotMatrixImage/DotMatrixImage";
 import PlainImage from "./PlainImage";
 import InfoCard from "./InfoCard/InfoCard";
 import TextDisplay from "./TextDisplay/TextDisplay";
+import SummaryTable from "./SummaryTable";
 
 import BreedCard from "../tayloredCotent/BreedCard";
 
@@ -133,21 +134,21 @@ export const componentRegistry: Record<string, ComponentDefinition> = {
   },
 
   plainImage: {
-  component: PlainImage,
-  defaultProps: {
-    images: "",
-    layout: "single",        // e.g. "single" | "row" | "grid"
-    fit: "cover",            // e.g. "cover" | "contain"
-    sizing: "auto",          // "fixed" | "auto" | "equal"
-    fixedWidth: undefined,
-    fixedHeight: undefined,
-    itemsPerRow: 3,
-    gap: 8,
-    borderRadius: 0,
-    showLabels: false,
-    labelPosition: "bottom",
+    component: PlainImage,
+    defaultProps: {
+      images: "",
+      layout: "single",        // e.g. "single" | "row" | "grid"
+      fit: "cover",            // e.g. "cover" | "contain"
+      sizing: "auto",          // "fixed" | "auto" | "equal"
+      fixedWidth: undefined,
+      fixedHeight: undefined,
+      itemsPerRow: 3,
+      gap: 8,
+      borderRadius: 0,
+      showLabels: false,
+      labelPosition: "bottom",
+    },
   },
-},
 
   breedCard: {
     component: BreedCard,
@@ -383,6 +384,22 @@ export const componentRegistry: Record<string, ComponentDefinition> = {
       cornerStyle: "rounded",
       size: "md",
       maxHeight: 200,
+    },
+  },
+
+  summaryTable: {
+    component: SummaryTable,
+    defaultProps: {
+      data: [
+        { name: "Alice", age: 28, role: "Designer" },
+        { name: "Bob", age: 34, role: "Engineer" },
+        { name: "Charlie", age: 25, role: "Product Manager" },
+      ],
+      limit: 5,
+      variant: "default",
+      cornerStyle: "rounded",
+      size: "md",
+      hideHeader: false,
     },
   },
 
