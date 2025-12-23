@@ -5,47 +5,12 @@
   position: absolute;
   z-index: 1;
 
-  .background {
-    position: absolute;
-    //left: 50%;
-    bottom: 0%;
-
-    .blobGreen {
-      position: absolute;
-      width: 3em;
-      height: 3em;
-      left: 3rem;
-      bottom: 3rem;
-
-      background: linear-gradient(135deg, #77e036, #d2e339);
-      filter: blur(30px);
-      opacity: 0.9;
-    }
-
-    /* yellow blob */
-    .blobYellow {
-      position: absolute;
-      width: 20%;
-      height: 20%;
-      left: -4rem;
-      bottom: 2rem;
-
-      background: #ffff61;
-      filter: blur(80px);
-      opacity: 0.8;
-    }
-  }
+  transition: none;
 
   .ContentWrapper {
     width: 100%;
     height: 100%;
     padding: 15px;
-    // background-color: #1A1A1A;
-
-    // fill: rgba(38, 38, 38, 0.21);
-    // stroke-width: 1px;
-    // stroke: #454444;
-    // backdrop-filter: blur(5.349999904632568px);
 
     background-color: rgba(26, 26, 26, 0.8);
     backdrop-filter: blur(16px);
@@ -59,8 +24,6 @@
     .titleWrapper {
       display: flex;
       flex-direction: column;
-      //flex: 0 0 auto;
-      gap: 0px;
 
       .title {
         font-size: 12px;
@@ -79,15 +42,14 @@
       width: 100%;
       height: 100%;
       display: flex;
-      //pointer-events: none;
       flex: 1 1 auto;
-      min-height: 0px;
+      min-height: 0;
     }
   }
 
   &.selected {
     .ContentWrapper {
-      border-color: #BDF29A; // highlight color
+      border-color: #BDF29A;
       box-shadow: 0 0 0 3px rgba(232, 244, 56, 0.3);
     }
   }
@@ -99,14 +61,38 @@
   }
 }
 
-@media screen and (max-width: 1024px) {
+/* ───────────────────────────────────────────── */
+/* 📱 Mobile / Tablet Overrides */
+/* ───────────────────────────────────────────── */
 
+// @media screen and (max-width: 1024px) {
+//   .Module {
+//     position: relative !important;
+//     transform: none !important;
+//     cursor: default;
+//     flex-shrink: 0;
+
+//     /* smoother carousel animation */
+//     transition: transform 300ms ease, opacity 300ms ease;
+//   }
+// }
+
+@media screen and (max-width: 1024px) {
   .Module {
-  width: 168px;
-  height: 168px;
-  padding: 3px;
-  position: relative;
-  z-index: 1;
+    /* Prevent overflow on mobile */
+    max-width: 100%;
+    max-height: 60vh;
+
+    width: auto !important;
+    height: auto !important;
+
+    aspect-ratio: auto; // 👈 keeps square modules stable
+
+    transition: transform 300ms ease, opacity 300ms ease;
   }
 
+  .Module > .ContentWrapper {
+    height: 100%;
+    width: 100%;
+  }
 }
