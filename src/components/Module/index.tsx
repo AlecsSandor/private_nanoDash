@@ -234,6 +234,10 @@ const ModuleComponent: React.FC<ModuleProps> = ({
       onTouchStart={isMobile ? handleTouchStart : undefined}
       onTouchMove={isMobile ? handleTouchMove : undefined}
     >
+      <div className={classes.background}>
+          <div className={classes.blobGreen}></div>
+          <div className={classes.blobYellow}></div>
+        </div>
       <div className={classes.ContentWrapper}>
         <div className={classes.titleWrapper}>
           <p className={classes.title}>{title}</p>
