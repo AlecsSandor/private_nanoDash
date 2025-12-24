@@ -205,3 +205,4 @@ export type ModuleType =
     [key: string]: any;
   };
 
+export type MobileLayout = "carousel" | "stack";

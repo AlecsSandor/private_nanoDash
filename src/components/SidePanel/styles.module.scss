@@ -14,7 +14,7 @@
   flex-direction: column;
   gap: 20px;
   color: #fff;
-  background-color: rgba(26, 26, 26, 0.2);
+  background-color: rgba(26, 26, 26, 0.8);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
 
@@ -146,4 +146,16 @@
   border: 1px solid #333;
   border-radius: 6px;
   color: #aaa;
+}
+
+@media screen and (max-width: 1024px) {
+  .sidePanel {
+    width: 100vw;
+    right: -100vw; // fully hidden off-screen
+    padding: 16px;
+  }
+
+  .sidePanel.open {
+    right: 0;
+  }
 }

@@ -8,7 +8,7 @@
     width: 100%;
     height: 100vh;
     background-size: 75px;
-    background-image: url("http://localhost:3000/backgroundDots2.svg");
+    //background-image: url("/backgroundDots2.svg");
   }
 }
 
@@ -42,7 +42,7 @@
     }
 
     background-size: 75px;
-    background-image: url("http://localhost:3000/backgroundDots2.svg");
+    //background-image: url("/backgroundDots2.svg");
   }
 
   .MobileModule {
@@ -62,4 +62,50 @@
     transform: scale(0.85);
     opacity: 0.6;
   }
+
+  .MobileStack {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    padding: 16px;
+    padding-bottom: 120px; // space for MenuBar
+
+    height: 100vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+
+    background-size: 75px;
+    //background-image: url("/backgroundDots2.svg");
+  }
+
+  .StackedModule {
+    width: 100% !important;
+    max-height: 60vh;
+    flex-shrink: 0;
+  }
 }
+
+// @media screen and (max-width: 1024px) {
+//   .MobileStack {
+//     display: flex;
+//     flex-direction: column;
+//     gap: 16px;
+
+//     padding: 16px;
+//     padding-bottom: 120px; // space for MenuBar
+
+//     height: 100vh;
+//     overflow-y: auto;
+//     -webkit-overflow-scrolling: touch;
+
+//     background-size: 75px;
+//     background-image: url("http://localhost:3000/backgroundDots2.svg");
+//   }
+
+//   .StackedModule {
+//     width: 100% !important;
+//     max-height: 60vh;
+//     flex-shrink: 0;
+//   }
+// }
