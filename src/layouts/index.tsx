@@ -7,7 +7,7 @@ export const DefaultLayout = () => {
   return (
     <div className={classes.defaultLayoutContainer}>
       <SidePanel />
-      <main>
+      <main className={classes.mainContent}>
         <div className={classes.pageContent}>
           <Outlet />
         </div>

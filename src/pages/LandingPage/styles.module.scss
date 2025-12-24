@@ -40,6 +40,9 @@
     &::-webkit-scrollbar {
       display: none;
     }
+
+    background-size: 75px;
+    background-image: url("http://localhost:3000/backgroundDots2.svg");
   }
 
   .MobileModule {
