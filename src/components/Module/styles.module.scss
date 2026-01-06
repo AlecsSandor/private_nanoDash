@@ -59,48 +59,37 @@
       left: 50%;
       transform: translate(-50%, -50%);
 
-      .blobGreen {
-        position: absolute;
-        width: 30%;
-        height: 30%;
-        // left: 3rem;
-        // bottom: 3rem;
-        top: 20%;
-        left: 80%;
-        transform: translate(-50%, -50%);
+      // .blobGreen {
+      //   position: absolute;
+      //   width: 30%;
+      //   height: 30%;
+      //   // left: 3rem;
+      //   // bottom: 3rem;
+      //   top: 20%;
+      //   left: 80%;
+      //   transform: translate(-50%, -50%);
 
-        background: linear-gradient(135deg, hsl(150, 70%, 50%), #d2e339);
-        filter: blur(70px);
-        opacity: 0.9;
-      }
+      //   background: linear-gradient(135deg, hsl(150, 70%, 50%), #d2e339);
+      //   filter: blur(70px);
+      //   opacity: 0.9;
+      // }
 
-      .blobYellow {
-        position: absolute;
-        width: 30%;
-        height: 30%;
-        // left: 3rem;
-        // bottom: 3rem;
-        top: 20%;
-        left: 80%;
-        transform: translate(-50%, -50%);
-
-        background: linear-gradient(135deg, hsl(150, 70%, 50%), #d2e339);
-        filter: blur(20px);
-        opacity: 0.9;
-      }
-
-      /* yellow blob */
       // .blobYellow {
       //   position: absolute;
-      //   width: 20%;
-      //   height: 20%;
-      //   left: -4rem;
-      //   bottom: 2rem;
+      //   width: 30%;
+      //   height: 30%;
+      //   // left: 3rem;
+      //   // bottom: 3rem;
+      //   top: 20%;
+      //   left: 80%;
+      //   transform: translate(-50%, -50%);
 
-      //   background: #ffff61;
-      //   filter: blur(80px);
-      //   opacity: 0.8;
+      //   background: linear-gradient(135deg, hsl(150, 70%, 50%), #d2e339);
+      //   filter: blur(20px);
+      //   opacity: 0.9;
       // }
+
+     
     }
 
     .ContentWrapper {
